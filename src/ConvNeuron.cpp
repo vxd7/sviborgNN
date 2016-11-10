@@ -1,7 +1,7 @@
-#include "convneuron.h"
+#include "ConvNeuron.h"
 
 // we can write height, length in the file of weights in the begining and read them from it;
-ConvNeuron::ConvNeuron(int height, int length, bool isRand = false){
+ConvNeuron::ConvNeuron(int height, int length, bool isRand /* = false*/){
     
     random = isRand;
     coreHeight = height;
