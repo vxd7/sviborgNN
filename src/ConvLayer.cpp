@@ -180,3 +180,36 @@ void ConvLayer::readSingleCore(std::string fileNamePrefix, const int neuronNumbe
 
 	neuronCoreFile.close();
 }
+
+void ConvLayer::updateNeuronCore(const std::vector<std::vector<double>> &updMap, const int neuronNumber) {
+	int neuronCoreHeight, neuronCoreWidth;
+	int oldCoreHeight, oldCoreWidth;
+
+	neuronCoreHeight = updMap.size();
+	neuronCoreWidth = updMap[0].size();
+
+	oldCoreHeight = neurons[neuronNumber].coreHeight;
+	oldCoreWidth = neurons[neuronNumber].coreLength;
+
+	if( (oldCoreHeight != neuronCoreHeight) || (oldCoreWidth != neuronCoreWidth) ) {
+		std::string errorMsg("Incorrect convolutional core dimensions! Function ConvLayer::updateNeuronCore(...)");
+		throw std::invalid_argument(errorMsg);
+	}
+
+	for(size_t i = 0; i < neuronCoreHeight; ++i) {
+		for(size_t j = 0; j < neuronCoreWidth; ++j) {
+			neurons[neuronNumber].convCore[i][j] = updMap[i][j];
+		}
+	}
+}
+
+void ConvLayer::updateAllCoresFromFiles(std::string fileNamePrefix) {
+
+	for(size_t i = 0; i < numberOfNeurons; ++i) {
+		std::vector <std::vector <double>> readCore;
+
+		readSingleCore(fileNamePrefix, i, readCore);
+
+		updateNeuronCore(readCore, i);
+	}
+}
