@@ -30,6 +30,10 @@ ConvLayer::ConvLayer(const int neuronCount, const int inputImageHeight, const in
 	inputMap.mapWidth = inputImageWidth;
 }
 
+// ************************************** // 
+// * Feature map manipulation functions * //
+// ************************************** // 
+
 //TODO: include neuron fixes
 void ConvLayer::computeFeatureMaps(std::vector<std::vector<double>> inputMap) {
 	for(size_t i = 0; i < numberOfNeurons; ++i) {
@@ -59,8 +63,9 @@ void ConvLayer::writeSingleMap(std::string fileNamePrefix, const int neuronNumbe
 	neuronMapFile << neuronMapHeight << " " << neuronMapWidth << std::endl;
 	for(size_t i = 0; i < neuronMapHeight; ++i) {
 		for(size_t j = 0; j < neuronMapWidth; ++j) {
-			neuronMapFile << neurons[neuronNumber].outputFeatureMap[i][j];
+			neuronMapFile << neurons[neuronNumber].outputFeatureMap[i][j] << " ";
 		}
+		neuronMapFile << std::endl;
 	}
 
 	neuronMapFile.close();
@@ -103,4 +108,43 @@ void ConvLayer::readSingleMap(std::string fileNamePrefix, const int neuronNumber
 		}
 	}
 
+	neuronMapFile.close();
+}
+
+void ConvLayer::unloadFeatureMaps() {
+	for(size_t i = 0; i < numberOfNeurons; ++i) {
+		neurons[i].unloadFeatureMap();
+	}
+}
+
+// ********************************************** //
+// * Convolutional cores manipulation functions * //
+// ********************************************** //
+
+void ConvLayer::writeSingleCore(std::string fileNamePrefix, int neuronNumber) {
+	std::ofstream neuronCoreFile;
+
+	fileNamePrefix += "_neuron";
+	std::string fileName = fileNamePrefix + std::to_string(neuronNumber) + ".fMap";
+
+	neuronCoreFile.open(fileName, std::ios::out | std::ios::trunc);
+
+	int neuronCoreHeight, neuronCoreWidth;
+
+	neuronCoreHeight = neurons[neuronNumber].coreHeight;
+	neuronCoreWidth = neurons[neuronNumber].coreLength;
+
+	neuronCoreFile << neuronCoreHeight << " " << neuronCoreWidth;
+	for(size_t i = 0; i < neuronCoreHeight; ++i) {
+		for(size_t j = 0; j < neuronCoreWidth; ++j) {
+			neuronCoreFile << neurons[neuronNumber].convCore[i][j] << " ";
+		}
+		neuronCoreFile << std::endl;
+	}
+
+	neuronCoreFile.close();
+}
+
+void ConvLayer::writeCoresToFiles(std::string fileNamePrefix) {
+	
 }
