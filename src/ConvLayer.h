@@ -7,15 +7,16 @@
 // #include "Log.h"
 
 struct mapDim {
-	int inputMapHeight;
-	int inputMapWidth;
-	
+	int mapHeight;
+	int mapWidth;
 };
 
 class ConvLayer {
 private:
 	int numberOfNeurons;
 
+	mapDim inputMap;
+	std::vector <mapDim> resultMaps;
 
 	std::vector <ConvNeuron> neurons;
 
@@ -31,7 +32,9 @@ private:
 	void updateNeuronCore(std::vector<std::vector<double>> &updMap, int neuronNumber);
 
 public:
-	ConvLayer(const int neuronCount, const int mapHeight, const int mapWidth);
+	ConvLayer(const int neuronCount);
+	ConvLayer(const int neuronCount, const int inputImageHeight, const int inputImageWidth);
+
 	~ConvLayer();
 
 	void computeFeatureMaps(std::vector<std::vector<double>> inputMap);
