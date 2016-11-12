@@ -25,16 +25,18 @@ private:
 	 // ************************************** // 
 
 	/**
+	 * Write a single feature map of the neuronNumber'th neuron
+	 * File names are constructed like this:
+	 * layer<NUM>_neuron<NUM>.fMap
+	 */
+	void writeSingleMap(std::string fileNamePrefix, const int neuronNumber);
+
+	/**
 	 * Write all the feature maps -- output of the neurons to the files.
 	 * File names are constructed like this:
 	 * layer<NUM>_neuron<NUM>.fMap
 	 */
 	void writeMapsToFiles(std::string fileNamePrefix);
-
-	/**
-	 * Write a single feature map of the neuronNumber'th neuron
-	 */
-	void writeSingleMap(std::string fileNamePrefix, const int neuronNumber);
 
 	/**
 	 * Read a single neuronNumber'th feature map from the file.
@@ -47,10 +49,18 @@ private:
 	 */
 	void unloadFeatureMaps();
 	
+
 	// ********************************************** //
 	// * Convolutional cores manipulation functions * //
 	// ********************************************** //
 	
+	/**
+	 * Write single core of the neuronNumber'th neuron to the file.
+	 * File name is constructed like this:
+	 * layer<NUM>_neuron<NUM>.fMap
+	 */
+	void writeSingleCore(std::string fileNamePrefix, int neuronNumber);
+
 	/**
 	 * Write all the convolutional core of all the neurons to the files.
 	 * File names are constructed like this
@@ -65,15 +75,16 @@ private:
 	void readCoreFromFile(std::string fileNamePrefix, const int neuronNumber, std::vector <std::vector <double>> &resCore);
 
 	/**
+	 * Update the convolutional core of the single neuron
+	 */
+	void updateNeuronCore(const std::vector<std::vector<double>> &updMap, const int neuronNumber);
+
+	/**
 	 * Update all the convolutional cores of all the neurons from the files with
 	 * fileNamePrefix prefix
 	 */
 	void updateAllCoresFromFiles(std::string fileNamePrefix);
 
-	/**
-	 * Update the convolutional core of the single neuron
-	 */
-	void updateNeuronCore(const std::vector<std::vector<double>> &updMap, const int neuronNumber);
 
 
 public:
