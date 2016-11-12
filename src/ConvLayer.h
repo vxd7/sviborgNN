@@ -6,20 +6,18 @@
 #include "ConvNeuron.h"
 // #include "Log.h"
 
+struct mapDim {
+	int inputMapHeight;
+	int inputMapWidth;
+	
+};
+
 class ConvLayer {
 private:
 	int numberOfNeurons;
 
-	int inputMapHeight;
-	int inputMapWidth;
 
 	std::vector <ConvNeuron> neurons;
-
-public:
-	ConvLayer(const int neuronCount, const int mapHeight, const int mapWidth);
-	~ConvLayer();
-
-	void computeFeatureMaps(std::vector<std::vector<double>> inputMap);
 
 	void writeMapsToFiles(std::string fileNamePrefix);
 	void readMapsFromFiles(std::string fileNamePrefix);
@@ -27,5 +25,15 @@ public:
 	void writeSingleMap(std::string fileNamePrefix, int neuronNumber);
 	void readSingleMap(std::string fileNamePrefix, int neuronNumber);
 
-	void updateMap(std::vector<std::vector<double>> &updMap, int neuronNumber);
+	void writeCoresToFiles(std::string fileNamePrefix);
+	void readCoresFromFiles(std::string fileNamePrefix);
+
+	void updateNeuronCore(std::vector<std::vector<double>> &updMap, int neuronNumber);
+
+public:
+	ConvLayer(const int neuronCount, const int mapHeight, const int mapWidth);
+	~ConvLayer();
+
+	void computeFeatureMaps(std::vector<std::vector<double>> inputMap);
+
 };
