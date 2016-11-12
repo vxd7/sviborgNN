@@ -146,5 +146,37 @@ void ConvLayer::writeSingleCore(std::string fileNamePrefix, int neuronNumber) {
 }
 
 void ConvLayer::writeCoresToFiles(std::string fileNamePrefix) {
-	
+	for(size_t i = 0; i < numberOfNeurons; ++i) {
+		writeSingleCore(fileNamePrefix, i);
+	}
+}
+
+void ConvLayer::readSingleCore(std::string fileNamePrefix, const int neuronNumber, std::vector <std::vector <double>> &resCore) {
+	std::ifstream neuronCoreFile;
+
+	fileNamePrefix += "_neuron";
+	std::string fileName = fileNamePrefix + std::to_string(neuronNumber) + ".fMap";
+
+	neuronCoreFile.open(fileName, std::ios::in);
+
+	int neuronCoreHeight, neuronCoreWidth;
+	neuronCoreFile >> neuronCoreHeight >> neuronCoreWidth;
+
+	if(resCore.size() != neuronCoreHeight) {
+		resCore.resize(neuronCoreHeight);
+	}
+
+	for(size_t i = 0; i < neuronCoreHeight; ++i) {
+		if(resCore[i].size() != neuronCoreWidth) {
+			resCore[i].resize(neuronCoreWidth);
+		}
+	}
+
+	for(size_t i = 0; i < neuronCoreHeight; ++i) {
+		for(size_t j = 0; j < neuronCoreWidth; ++j) {
+			neuronCoreFile >> resCore[i][j];
+		}
+	}
+
+	neuronCoreFile.close();
 }
