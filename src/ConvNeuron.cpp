@@ -1,6 +1,4 @@
 #include "ConvNeuron.h"
-#include <vector>
-#include <math.h>
 
 // we can write height, length in the file of weights in the begining and read them from it;
 ConvNeuron::ConvNeuron(int height, int length, bool isRand /* = false*/){
@@ -21,29 +19,31 @@ ConvNeuron::ConvNeuron(int height, int length, bool isRand /* = false*/){
 void ConvNeuron::initNeuron(){ 
     //here we can put randomization (instead of using it in constructor), and getting weights from the FILE with function getCore;
 }
-void ConvNeuron::processMap(const std::vector <std::vector<double>> &inputMap, std::vector <std::vector<double>> &outputFeatureMap){
+void ConvNeuron::processMap(std::vector <std::vector<double>> &map){
     double summ = 0;
     int fmapi = 0, fmapj = 0;
     // set up the featureMap size;
-    outputFeatureMap.resize(inputMapHeight/coreHeight);
-    for (int i = 0; i < outputFeatureMap.size(); i++){
-        outputFeatureMap[i].resize(inputMapLength / coreLength);
+    featureMap.resize(inputMapHeight/coreHeight);
+    for (int i = 0; i < featureMap.size(); i++){
+        featureMap[i].resize(inputMapLength / coreLength);
     }
     // convolution;
     for (int i = 0; i < inputMapHeight; i = i + coreHeight){
         for (int j = 0; j < inputMapLength; j = j + coreLength){
-            summ = summate(inputMap,i,j);
-            outputFeatureMap[fmapi][fmapj] = tFunc(summ);
+            summ = summate(map,i,j);
+            featureMap[fmapi][fmapj] = tFunc(summ);
             fmapj++; 
         }
     }
+    // rewriting input;
+    map = featureMap;
 }
-double ConvNeuron::summate(const std::vector <std::vector<double>> &inputMap, int ipos, int jpos){
+double ConvNeuron::summate(const std::vector <std::vector<double>> &map, int ipos, int jpos){
     double summ = 0;
 
     for (int i = 0; i < coreHeight; i++){
         for (int j = 0; j < coreLength; j++){
-            summ = summ + inputMap[ipos][jpos] * convCore[i][j];
+            summ = summ + map[ipos][jpos] * convCore[i][j];
         }
     }
 
@@ -56,7 +56,7 @@ double ConvNeuron::tFunc(double x)
 
     return Func;
 }
-void ConvNeuron::randomize(){
+void ConvNeuron::randomWeights(){
 
     for (int i = 0; i < coreHeight; i++){
         for (int j = 0; j < coreLength; j++){
@@ -67,7 +67,7 @@ void ConvNeuron::randomize(){
 }
 ConvNeuron::~ConvNeuron(){
     convCore.clear();
-    //featureMap.clear();
+    featureMap.clear();
     aWeight = 0;
     inputMapHeight = inputMapLength = 0;
     coreHeight = coreLength = 0;
