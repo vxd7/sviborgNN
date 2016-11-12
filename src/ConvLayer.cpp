@@ -47,7 +47,7 @@ void ConvLayer::writeSingleMap(std::string fileNamePrefix, const int neuronNumbe
 	std::ofstream neuronMapFile;
 
 	fileNamePrefix += "_neuron";
-	std::string fileName= fileNamePrefix + std::to_string(neuronNumber) + ".txt";
+	std::string fileName = fileNamePrefix + std::to_string(neuronNumber) + ".fMap";
 	
 	//Empty file if something was there
 	neuronMapFile.open(fileName, std::ios::out | std::ios::trunc);
@@ -64,5 +64,43 @@ void ConvLayer::writeSingleMap(std::string fileNamePrefix, const int neuronNumbe
 	}
 
 	neuronMapFile.close();
+}
+
+
+void ConvLayer::readSingleMap(std::string fileNamePrefix, const int neuronNumber, std::vector <std::vector <double>> &resMap) {
+	std::ifstream neuronMapFile;
+
+	fileNamePrefix += "_neuron";
+	std::string fileName = fileNamePrefix + std::to_string(neuronNumber) + ".fMap";
+
+	neuronMapFile.open(fileName, std::ios::in);
+
+	/**
+	 * Read the height and width of the map
+	 */
+	int neuronMapHeight, neuronMapWidth;
+	neuronMapFile >> neuronMapHeight >> neuronMapWidth;
+
+	/**
+	 * Check whether we have the space to read the map into
+	 */
+	if(resMap.size() != neuronMapHeight) {
+		resMap.resize(neuronMapHeight);
+	}
+
+	for(size_t i = 0; i < neuronMapHeight; ++i) {
+		if(resMap[i].size() != neuronMapWidth) {
+			resMap[i].resize(neuronMapWidth);
+		}
+	}
+
+	/**
+	 * And read it!
+	 */
+	for(size_t i = 0; i < neuronMapHeight; ++i) {
+		for(size_t j = 0; j < neuronMapWidth; ++j) {
+			neuronMapFile >> resMap[i][j];
+		}
+	}
 
 }
