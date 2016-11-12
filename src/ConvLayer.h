@@ -72,7 +72,7 @@ private:
 	 * Read single convolutional core of the neuronNumber'th neuron.
 	 * Takes a 2-dim. vector as the destination
 	 */
-	void readCoreFromFile(std::string fileNamePrefix, const int neuronNumber, std::vector <std::vector <double>> &resCore);
+	void readSingleCore(std::string fileNamePrefix, const int neuronNumber, std::vector <std::vector <double>> &resCore);
 
 	/**
 	 * Update the convolutional core of the single neuron
