@@ -23,13 +23,14 @@ private:
 	void writeMapsToFiles(std::string fileNamePrefix);
 	void readMapsFromFiles(std::string fileNamePrefix);
 
-	void writeSingleMap(std::string fileNamePrefix, int neuronNumber);
-	void readSingleMap(std::string fileNamePrefix, int neuronNumber);
+	void writeSingleMap(std::string fileNamePrefix, const int neuronNumber);
+	void readSingleMap(std::string fileNamePrefix, const int neuronNumber);
 
 	void writeCoresToFiles(std::string fileNamePrefix);
 	void readCoresFromFiles(std::string fileNamePrefix);
 
-	void updateNeuronCore(std::vector<std::vector<double>> &updMap, int neuronNumber);
+	void updateNeuronCore(const std::vector<std::vector<double>> &updMap, const int neuronNumber);
+	void unloadFeatureMaps();
 
 public:
 	ConvLayer(const int neuronCount);
