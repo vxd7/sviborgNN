@@ -5,7 +5,9 @@
 
 #include "ConvLayer.h"
 
-ConvLayer::ConvLayer(const int neuronCount) {
+ConvLayer::ConvLayer(const int neuronCount, LayerType newLayerType) {
+	type = newLayerType;
+
 	if(neuronCount <= 0) {
 		std::string errorMsg("Incorrect neuron number! Function ConvLayer::ConvLayer(...)");
 
@@ -35,9 +37,30 @@ ConvLayer::ConvLayer(const int neuronCount, const int inputImageHeight, const in
 // ************************************** // 
 
 //TODO: include neuron fixes
-void ConvLayer::computeFeatureMaps(std::vector<std::vector<double>> inputMap) {
+void ConvLayer::computeFeatureMaps(std::vector<std::vector<std::vector<double>>> &inputMap) {
+
+
+	/**
+	 * Construct packets of feature maps 
+	 * according to the adjacency table adjMatrix
+	 */
 	for(size_t i = 0; i < numberOfNeurons; ++i) {
-		neurons[i].processMap(inputMap);
+		std::vector<std::vector<std::vector<double>>> neuronPacket;
+
+		for(size_t j = 0; j < adjMatrix.size(); ++j) {
+			if(adjMatrix[i][j]) {
+				neuronPacket.push_back(inputMap[j]);
+			}
+		}
+
+		neurons[i].processMaps(neuronPacket);
+	}
+
+}
+
+void ConvLayer::subsampleFeatureMaps(std::vector<std::vector<std::vector<double>>> &inputMap) {
+	for(size_t i = 0; i < numberOfNeurons; ++i) {
+		neurons[i].subsampleMap(inputMap[i]);
 	}
 }
 

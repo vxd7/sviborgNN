@@ -6,6 +6,11 @@
 #include "ConvNeuron.h"
 // #include "Log.h"
 
+enum LayerType {
+	CONV, /* Convolutional layer */
+	SUBSAMPLE /* Subsampling layer */
+};
+
 struct mapDim {
 	int mapHeight;
 	int mapWidth;
@@ -19,6 +24,9 @@ private:
 	std::vector <mapDim> resultMaps;
 
 	std::vector <ConvNeuron> neurons;
+
+	/* Adjacency matrix */
+	std::vector<std::vector<bool>> adjMatrix;
 
 	 // ************************************** // 
 	 // * Feature map manipulation functions * //
@@ -88,7 +96,11 @@ private:
 
 
 public:
-	ConvLayer(const int neuronCount);
+	LayerType type;
+
+	ConvLayer(const int neuronCount, LayerType newLayerType);
+
+	/* Construstor for the first layer. Considered convolutional by default */
 	ConvLayer(const int neuronCount, const int inputImageHeight, const int inputImageWidth);
 
 	~ConvLayer();
@@ -96,6 +108,8 @@ public:
 	/**
 	 * Process the input feature maps of all the neurons
 	 */
-	void computeFeatureMaps(std::vector<std::vector<double>> inputMap);
+	void computeFeatureMaps(std::vector<std::vector<std::vector<double>>> &inputMap);
+
+	void subsampleFeatureMaps(std::vector<std::vector<std::vector<double>>> &inputMap);
 
 };
