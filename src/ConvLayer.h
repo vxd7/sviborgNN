@@ -16,6 +16,8 @@ struct mapDim {
 	int mapWidth;
 };
 
+class ConvNetwork;
+
 class ConvLayer {
 private:
 	int numberOfNeurons;
@@ -98,18 +100,22 @@ private:
 public:
 	LayerType type;
 
-	ConvLayer(const int neuronCount, LayerType newLayerType);
+	ConvLayer(const int neuronCount, const LayerType newLayerType);
+	ConvLayer(const int neuronCount, const std::pair<int, int> coreDim, const LayerType newLayerType);
 
-	/* Construstor for the first layer. Considered convolutional by default */
-	ConvLayer(const int neuronCount, const int inputImageHeight, const int inputImageWidth);
-
-	~ConvLayer();
+	/* Construstor for the first layer (0'th one here). Considered convolutional by default */
+	ConvLayer(const int neuronCount, const std::pair<int, int> coreDim, const int inputImageHeight, const int inputImageWidth);
 
 	/**
 	 * Process the input feature maps of all the neurons
 	 */
 	void computeFeatureMaps(std::vector<std::vector<std::vector<double>>> &inputMap);
 
+	/**
+	 * Subsample the matrix
+	 */
 	void subsampleFeatureMaps(std::vector<std::vector<std::vector<double>>> &inputMap);
+
+	friend ConvNetwork;
 
 };

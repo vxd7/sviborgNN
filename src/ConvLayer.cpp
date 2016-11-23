@@ -5,7 +5,10 @@
 
 #include "ConvLayer.h"
 
-ConvLayer::ConvLayer(const int neuronCount, LayerType newLayerType) {
+/**
+ * General constructor
+ */
+ConvLayer::ConvLayer(const int neuronCount, const LayerType newLayerType) {
 	type = newLayerType;
 
 	if(neuronCount <= 0) {
@@ -18,7 +21,12 @@ ConvLayer::ConvLayer(const int neuronCount, LayerType newLayerType) {
 	neurons.resize(numberOfNeurons);
 }
 
-ConvLayer::ConvLayer(const int neuronCount, const int inputImageHeight, const int inputImageWidth) {
+/**
+ * Constructor which takes convolutional core dimensions
+ */
+ConvLayer::ConvLayer(const int neuronCount, const std::pair<int, int> coreDim, const LayerType newLayerType) {
+	type = newLayerType;
+
 	if(neuronCount <= 0) {
 		std::string errorMsg("Incorrect neuron number! Function ConvLayer::ConvLayer(...)");
 
@@ -26,7 +34,24 @@ ConvLayer::ConvLayer(const int neuronCount, const int inputImageHeight, const in
 	}
 
 	numberOfNeurons = neuronCount;
-	neurons.resize(numberOfNeurons);
+	neurons.resize(numberOfNeurons, ConvNeuron(coreDim.first, coreDim.second, true)); /* !HARDCODED TRUE */
+
+}
+
+/* Constructor for the first layer */
+ConvLayer::ConvLayer(const int neuronCount, const std::pair<int, int> coreDim, const int inputImageHeight, const int inputImageWidth) {
+
+	/* First layer is considered convolutional by default */
+	type = CONV;
+
+	if(neuronCount <= 0) {
+		std::string errorMsg("Incorrect neuron number! Function ConvLayer::ConvLayer(...)");
+
+		throw std::invalid_argument(errorMsg);
+	}
+
+	numberOfNeurons = neuronCount;
+	neurons.resize(numberOfNeurons, ConvNeuron(coreDim.first, coreDim.second, true)); /* ! HARDCODED TRUE ! */
 
 	inputMap.mapHeight = inputImageHeight;
 	inputMap.mapWidth = inputImageWidth;
@@ -155,7 +180,7 @@ void ConvLayer::writeSingleCore(std::string fileNamePrefix, int neuronNumber) {
 	int neuronCoreHeight, neuronCoreWidth;
 
 	neuronCoreHeight = neurons[neuronNumber].coreHeight;
-	neuronCoreWidth = neurons[neuronNumber].coreLength;
+	neuronCoreWidth = neurons[neuronNumber].coreWidth;
 
 	neuronCoreFile << neuronCoreHeight << " " << neuronCoreWidth;
 	for(size_t i = 0; i < neuronCoreHeight; ++i) {
@@ -212,7 +237,7 @@ void ConvLayer::updateNeuronCore(const std::vector<std::vector<double>> &updMap,
 	neuronCoreWidth = updMap[0].size();
 
 	oldCoreHeight = neurons[neuronNumber].coreHeight;
-	oldCoreWidth = neurons[neuronNumber].coreLength;
+	oldCoreWidth = neurons[neuronNumber].coreWidth;
 
 	if( (oldCoreHeight != neuronCoreHeight) || (oldCoreWidth != neuronCoreWidth) ) {
 		std::string errorMsg("Incorrect convolutional core dimensions! Function ConvLayer::updateNeuronCore(...)");
