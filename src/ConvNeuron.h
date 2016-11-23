@@ -40,5 +40,8 @@ public:
 
     void initNeuron(); // empty for now;
 
+	void changeBias(double newNeuronBias);
+	void changeSubsCoeff(double newSubsCoeff);
+
 	friend ConvLayer;
 };

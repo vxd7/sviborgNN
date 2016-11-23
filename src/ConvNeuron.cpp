@@ -11,6 +11,9 @@ ConvNeuron::ConvNeuron(int height, int length, bool isRand /* = false*/) {
     coreHeight = height;
     coreWidth = length;
 
+	neuronBias = 1.0;
+	subsampleCoeff = 1.0;
+
     convCore.resize(height);
     for (int i = 0; i < height; i++) {
         convCore[i].assign(length,0.0);
