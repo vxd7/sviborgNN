@@ -32,7 +32,7 @@ private:
 	void unloadFeatureMap();
 
 public:
-    ConvNeuron(int newCoreHeight, int length, bool isRand = false); // random weights if isRand = true, else pushback 0.0;
+    ConvNeuron(int newCoreHeight, int newCoreWidth, bool isRand = false); // random weights if isRand = true, else pushback 0.0;
 
     void processMaps(const std::vector<std::vector <std::vector<double>>> &inputMaps); // creating an output feautureMap;
 

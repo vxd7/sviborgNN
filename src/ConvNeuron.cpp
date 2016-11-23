@@ -5,24 +5,25 @@
 #include "ConvNeuron.h"
 
 // we can write height, length in the file of weights in the begining and read them from it;
-ConvNeuron::ConvNeuron(int height, int length, bool isRand /* = false*/) {
+ConvNeuron::ConvNeuron(int newCoreHeight, int newCoreWidth, bool isRand /* = false*/) {
     
     random = isRand;
-    coreHeight = height;
-    coreWidth = length;
+    coreHeight = newCoreHeight;
+    coreWidth = newCoreWidth;
 
 	neuronBias = 1.0;
 	subsampleCoeff = 1.0;
 
-    convCore.resize(height);
-    for (int i = 0; i < height; i++) {
-        convCore[i].assign(length,0.0);
+    convCore.resize(coreHeight);
+    for (int i = 0; i < coreHeight; i++) {
+        convCore[i].assign(coreWidth,0.0);
     }
 
     if (random) {
         randomizeCores();
     }
 }
+
 void ConvNeuron::initNeuron() { 
     //here we can put randomization (instead of using it in constructor), and getting weights from the FILE with function getCore;
 }
