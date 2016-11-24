@@ -36,6 +36,8 @@ public:
 
     void processMaps(const std::vector<std::vector <std::vector<double>>> &inputMaps); // creating an output feautureMap;
 
+    void processSingleMap(const std::vector <std::vector<double>> &inputMap); // creating an output feautureMap;
+
 	void subsampleMap(const std::vector<std::vector<double>> &inputMap);
 
     void initNeuron(); // empty for now;

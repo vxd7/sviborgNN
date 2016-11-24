@@ -27,6 +27,7 @@ ConvNeuron::ConvNeuron(int newCoreHeight, int newCoreWidth, bool isRand /* = fal
 void ConvNeuron::initNeuron() { 
     //here we can put randomization (instead of using it in constructor), and getting weights from the FILE with function getCore;
 }
+
 void ConvNeuron::processMaps(const std::vector<std::vector <std::vector<double>>> &inputMaps) {
 
 	std::vector <double> mapSums;
@@ -39,9 +40,9 @@ void ConvNeuron::processMaps(const std::vector<std::vector <std::vector<double>>
 	int inputMapWidth = inputMaps[0][0].size();
 
     // set up the featureMap size;
-    outputFeatureMap.resize(inputMapHeight/coreHeight);
+    outputFeatureMap.resize(inputMapHeight - (coreHeight - 1));
     for (int i = 0; i < outputFeatureMap.size(); i++) {
-        outputFeatureMap[i].resize(inputMapWidth/ coreWidth);
+        outputFeatureMap[i].resize(inputMapWidth - (coreWidth - 1));
     }
 
     // convolution;
@@ -73,11 +74,47 @@ void ConvNeuron::processMaps(const std::vector<std::vector <std::vector<double>>
 
 }
 
+void ConvNeuron::processSingleMap(const std::vector <std::vector<double>> &inputMap) {
+	int fmapi = 0, fmapj = 0;
+
+	int inputMapHeight = inputMap.size();
+	int inputMapWidth = inputMap[0].size();
+
+    // set up the featureMap size;
+    outputFeatureMap.resize(inputMapHeight - (coreHeight - 1));
+    for (int i = 0; i < outputFeatureMap.size(); i++) {
+        outputFeatureMap[i].resize(inputMapWidth - (coreWidth - 1));
+    }
+
+	for (int i = 0; (i + coreHeight) < inputMapHeight; ++i) {
+		for (int j = 0; (j + coreWidth) < inputMapWidth; ++j) {
+			double summ;
+
+			summ = summate(inputMap, i, j);
+			summ = tFunc(summ);
+
+			outputFeatureMap[fmapi][fmapj] = summ;
+
+			fmapj++; 
+		}
+
+		fmapi++;
+	}
+}
+
 void ConvNeuron::subsampleMap(const std::vector<std::vector<double>> &inputMap) {
 	size_t inputMapHeight = inputMap.size();
 	size_t inputMapWidth = inputMap[0].size();
 
 	size_t fmapi = 0, fmapj = 0;
+
+	size_t subMapHeight = 2, subMapWidth = 2;
+
+    // set up the outputFeatureMap size;
+    outputFeatureMap.resize(inputMapHeight - (subMapHeight- 1));
+    for (int i = 0; i < outputFeatureMap.size(); i++) {
+        outputFeatureMap[i].resize(inputMapWidth - (subMapWidth- 1));
+    }
 
 	for(size_t i = 0; i < inputMapHeight; i += 2, fmapi++) {
 		for(size_t j = 0; j < inputMapWidth; j += 2, fmapj++) {
