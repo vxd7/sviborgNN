@@ -83,6 +83,13 @@ void ConvLayer::computeFeatureMaps(std::vector<std::vector<std::vector<double>>>
 
 }
 
+void ConvLayer::computeFeatureMap(std::vector<std::vector<double>> &inputMap) {
+	for(size_t i = 0; i < numberOfNeurons; ++i) {
+		neurons[i].processSingleMap(inputMap);
+	}
+	
+}
+
 void ConvLayer::subsampleFeatureMaps(std::vector<std::vector<std::vector<double>>> &inputMap) {
 	for(size_t i = 0; i < numberOfNeurons; ++i) {
 		neurons[i].subsampleMap(inputMap[i]);
@@ -162,6 +169,12 @@ void ConvLayer::readSingleMap(std::string fileNamePrefix, const int neuronNumber
 void ConvLayer::unloadFeatureMaps() {
 	for(size_t i = 0; i < numberOfNeurons; ++i) {
 		neurons[i].unloadFeatureMap();
+	}
+}
+
+void ConvLayer::getAllFeatureMaps(std::vector<std::vector<std::vector<double>>> &resultMaps) {
+	for(size_t i = 0; i < numberOfNeurons; ++i) {
+		resultMaps.push_back(neurons[i].outputFeatureMap);
 	}
 }
 

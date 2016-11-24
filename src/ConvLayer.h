@@ -112,9 +112,19 @@ public:
 	void computeFeatureMaps(std::vector<std::vector<std::vector<double>>> &inputMap);
 
 	/**
+	 * Process one feature map
+	 */
+	void computeFeatureMap(std::vector<std::vector<double>> &inputMap);
+
+	/**
 	 * Subsample the matrix
 	 */
 	void subsampleFeatureMaps(std::vector<std::vector<std::vector<double>>> &inputMap);
+
+	/**
+	 * Pack all feature maps into one vector of matrices 
+	 */
+	void getAllFeatureMaps(std::vector<std::vector<std::vector<double>>> &resultMaps);
 
 	friend ConvNetwork;
 
