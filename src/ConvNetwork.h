@@ -4,7 +4,7 @@
 #include <utility>
 
 #include "ConvLayer.h"
-#include "ImageBMP.h"
+#include "ImageIface.h"
 
 class ConvNetwork
 {
@@ -12,10 +12,9 @@ private:
     int numLayers;
     double learningSpeed;
     std::vector <double> desiredOutputMap;
-    std::vector <std::vector <double>> inputMap;
 	std::vector <ConvLayer> networkLayers;
 
-	ImageBMP inputImage;
+	ImageIface inputImages;
 public:
     // Initialization of Network;
     ConvNetwork(const std::vector<int> neuronsInLayers, const std::vector<std::pair<int, int>> &convCoresDim);
@@ -24,10 +23,16 @@ public:
     ConvNetwork();
 
     // Processing an output vector;
-    void processInput(std::vector <double> &outputMap);
+    void processInputMap(int inputMapNumber, std::vector <double> &outputMap);
+	//Process only first input map
+    void processInputMap(std::vector <double> &outputMap);
 
-    // Getting InputMap from FILE;
-    void getInput();
+    // Get list of images from FILE;
+    void getInput(std::string imageListFile);
+
+	/**
+	 * Learning functions
+	 */
 
     // Getting Learning Parameters for BP from FILE;
     void getBPLearningParameters();
@@ -36,6 +41,10 @@ public:
     void BackPropLearning(std::vector <double> DesiredOutputMap, double learningSpeed);
 
     double GradientNeuron();
+
+	/**
+	 * Misc functions
+	 */
 
     // Delete Network;
     ~ConvNetwork();
