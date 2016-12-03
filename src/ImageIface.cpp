@@ -11,17 +11,17 @@
 //https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
 void ImageIface::getImageList(std::vector<std::string> &imageList) {
      
-    for (size_t i = 0; i < imageList.size(); ++i) {
+    for (size_t i = 0; i < imageList.size(); ++i) { std::ifstream map(imageList[i]);
         try {
-            std::ifstream map(imageList[i]);
+           
             map.exceptions(std::ifstream::failbit | std::ifstream::badbit);
             imgList.push_back(imageList[i]);
-            map.close();
+            
         }
         catch (const std::ifstream::failure& e) {
             std::cerr << "Exception opening/reading file -- index " << i + 1;
         }
-
+        map.close();
     }
   
 }
