@@ -3,34 +3,41 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "C:\Users\Gleb\Desktop\stb_image.h"
 
 //https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
 void ImageIface::getImageList(std::vector<std::string> &imageList) {
-	for(size_t i = 0; i < imageList.size(); ++i) {
-		//if file exists
-		//else -- throw ex
-        std::ifstream map(imageList[i]);
-        if (map.good()) {
+     
+    for (size_t i = 0; i < imageList.size(); ++i) {
+        try {
+            std::ifstream map(imageList[i]);
+            map.exceptions(std::ifstream::failbit | std::ifstream::badbit);
             imgList.push_back(imageList[i]);
+            map.close();
         }
-        else
-            throw ; 
-        map.close();
-	}
-	
+        catch (const std::ifstream::failure& e) {
+            std::cerr << "Exception opening/reading file -- index " << i + 1;
+        }
+
+    }
+  
 }
 
 void ImageIface::computeGrayscaleMatrix(std::string filename, std::vector <std::vector <double>> &imageMatrix) {
 	int w, h, comp;
 
 	unsigned char* map = stbi_load(filename.c_str(), &w, &h, &comp, 1);
-	if(!map) {
-		//throw ex
-	}
-
+    try {
+        if (!map) {
+            throw (filename);
+        }
+    }
+    catch (std::string a) {
+        std::cerr << "Exception opening image: " << filename;
+    }
 	if(w * h == 0) {
 		std::cout << "Error loading image! Probably image is not correct" << std::endl;
 	}
@@ -74,8 +81,13 @@ void ImageIface::normalizeEverything() {
     for (int i = 0; i < imgList.size(); ++i) {
         int w, h, comp;
         unsigned char* map = stbi_load(imgList[i].c_str(), &w, &h, &comp, 1);
-        if (!map) {
-            //throw ex
+        try {
+            if (!map) {
+                throw (imgList[i]);
+            }
+        }
+        catch (std::string filename) {
+            std::cerr << "Exception opening image: " << filename;
         }
         if (w > w_max) { w_max = w; }
         if (h > h_max) { h_max = h; }
