@@ -15,8 +15,8 @@ private:
     bool random;
     void randomizeCores();
 
-	double neuronBias;
-	double subsampleCoeff;
+	double neuronBias = 1.0; // !!!
+	double subsampleCoeff = 1.0;
 
     double summate(const std::vector <std::vector<double>> &inputMap, int ipos, int jpos); // may be this is shit, but i wanted to optimise the code;
     double tFunc(double x);
@@ -32,7 +32,10 @@ private:
 	void unloadFeatureMap();
 
 public:
-    ConvNeuron(int newCoreHeight, int newCoreWidth, bool isRand = false); // random weights if isRand = true, else pushback 0.0;
+	// TODO: change hardcoded true
+    ConvNeuron(int newCoreHeight, int newCoreWidth, bool isRand = true); // random weights if isRand = true, else pushback 0.0;
+
+	ConvNeuron();
 
     void processMaps(const std::vector<std::vector <std::vector<double>>> &inputMaps); // creating an output feautureMap;
 

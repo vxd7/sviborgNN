@@ -23,6 +23,9 @@ ConvNeuron::ConvNeuron(int newCoreHeight, int newCoreWidth, bool isRand /* = fal
         randomizeCores();
     }
 }
+ConvNeuron::ConvNeuron() {
+	
+}
 
 void ConvNeuron::initNeuron() { 
     //here we can put randomization (instead of using it in constructor), and getting weights from the FILE with function getCore;
@@ -163,4 +166,12 @@ void ConvNeuron::unloadFeatureMap() {
 	for(size_t i = 0; i < outputFeatureMap.size(); ++i) {
 		outputFeatureMap.clear();
 	}
+}
+
+void ConvNeuron::changeBias(double newNeuronBias) {
+	neuronBias = newNeuronBias;
+}
+
+void ConvNeuron::changeSubsCoeff(double newSubsCoeff) {
+	subsampleCoeff = newSubsCoeff;
 }

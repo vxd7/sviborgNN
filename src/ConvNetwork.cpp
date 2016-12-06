@@ -28,7 +28,7 @@ ConvNetwork::ConvNetwork(const std::vector<int> neuronsInLayers, const std::vect
 	numLayers = layersCount;
 
 	/* Construct the first layer -- CONV one*/
-	networkLayers.push_back(ConvLayer(neuronsInLayers[0], convCoresDim[0], 0, 0)); /* !HARDCODED INPUT W/H */
+	networkLayers.push_back(ConvLayer(neuronsInLayers[0], convCoresDim[0], 5, 5)); /* !HARDCODED INPUT W/H */
 
 	/* Construct all the other layers */
 	/* j is for the convCoresDim array -- convolution cores dimensions */
@@ -75,7 +75,6 @@ void ConvNetwork::processInputMap(int inputMapNumber, std::vector <double> &outp
 
 	//std::vector<std::vector<std::vector<double>>> lastLayerOutput;
 	//int lastLayer = networkLayers.size() - 1;
-
 	//networkLayers[lastLayer].getAllFeatureMaps(lastLayerOutput);
 
 	/* layerOutput now has the output of the last layer */

@@ -30,9 +30,9 @@ public:
     // Get list of images from FILE;
     void getInput(std::string imageListFile);
 
-	/**
-	 * Learning functions
-	 */
+	/**********************
+	 * Learning functions *
+	 **********************/
 
     // Getting Learning Parameters for BP from FILE;
     void getBPLearningParameters();
@@ -42,9 +42,9 @@ public:
 
     double GradientNeuron();
 
-	/**
-	 * Misc functions
-	 */
+	/******************
+	 * Misc functions *
+	 ******************/
 
     // Delete Network;
     ~ConvNetwork();
