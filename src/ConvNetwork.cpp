@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 #include <string>
 #include <stdexcept>
@@ -102,11 +103,17 @@ void ConvNetwork::processInputMap(std::vector <double> &outputMap) {
 }
 
 void ConvNetwork::getInput(std::string imageListFile) {
-	std::ifstream fin(imageListFile.c_str());
-
-	if(!fin.good()) {
-		//throw ex
-	}
+    // exception added;
+    std::ifstream fin(imageListFile.c_str());
+    try {
+       fin.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    }
+    catch (const std::ifstream::failure& e) {
+        std::cerr << "Exception opening/reading file";
+    }
+	//if(!fin.good()) {
+	//	//throw ex
+	//}
 
 	int number;
 	fin >> number;
