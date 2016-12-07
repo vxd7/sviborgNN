@@ -17,7 +17,7 @@ private:
 	ImageIface inputImages;
 public:
     // Initialization of Network;
-    ConvNetwork(const std::vector<int> neuronsInLayers, const std::vector<std::pair<int, int>> &convCoresDim);
+    ConvNetwork(const std::vector<int> &neuronsInLayers, const std::vector<std::pair<int, int>> &convCoresDim);
 
     // Reading num of Layers from File;
     ConvNetwork();
@@ -47,5 +47,5 @@ public:
 	 ******************/
 
     // Delete Network;
-    ~ConvNetwork();
+    //~ConvNetwork();
 };

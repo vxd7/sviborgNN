@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 #include <stdexcept>
@@ -8,7 +9,7 @@
 #include "NetworkException.h"
 #include "ImageIface.h"
 
-ConvNetwork::ConvNetwork(const std::vector<int> neuronsInLayers, const std::vector<std::pair<int, int>> &convCoresDim) {
+ConvNetwork::ConvNetwork(const std::vector<int> &neuronsInLayers, const std::vector<std::pair<int, int>> &convCoresDim) {
 
 	int layersCount = neuronsInLayers.size();
 
@@ -20,13 +21,14 @@ ConvNetwork::ConvNetwork(const std::vector<int> neuronsInLayers, const std::vect
 	 *
 	 * (layersCount + 1) because we count layers from 0 by default
 	 */
-	if((layersCount + 1)%2 != 0) {
-		std::string errorMsg("Incorrect number of layers. numLayers is not even!");
+	// if((layersCount + 1)%2 != 0) {
+	// 	std::string errorMsg("Incorrect number of layers. numLayers is not even!");
 
-		throw std::invalid_argument(errorMsg);
-	}
+	// 	throw std::invalid_argument(errorMsg);
+	// }
 
 	numLayers = layersCount;
+	std::cout << numLayers;
 
 	/* Construct the first layer -- CONV one*/
 	networkLayers.push_back(ConvLayer(neuronsInLayers[0], convCoresDim[0], 5, 5)); /* !HARDCODED INPUT W/H */
@@ -42,6 +44,10 @@ ConvNetwork::ConvNetwork(const std::vector<int> neuronsInLayers, const std::vect
 			++j;
 		}
 	}
+}
+
+ConvNetwork::ConvNetwork() {
+	
 }
 
 void ConvNetwork::processInputMap(int inputMapNumber, std::vector <double> &outputMap) {
@@ -104,13 +110,14 @@ void ConvNetwork::processInputMap(std::vector <double> &outputMap) {
 
 void ConvNetwork::getInput(std::string imageListFile) {
     // exception added;
-    std::ifstream fin(imageListFile.c_str());
+    std::ifstream fin(imageListFile.c_str(), std::ios::in);
     try {
        fin.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     }
     catch (const std::ifstream::failure& e) {
         std::cerr << "Exception opening/reading file";
     }
+	
 	//if(!fin.good()) {
 	//	//throw ex
 	//}
@@ -126,6 +133,7 @@ void ConvNetwork::getInput(std::string imageListFile) {
 
 		imageList.push_back(fileName);
 	}
+	fin.close();
 
 	inputImages.getImageList(imageList);
 	inputImages.normalizeEverything();
