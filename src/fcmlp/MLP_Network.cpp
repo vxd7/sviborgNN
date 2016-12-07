@@ -46,7 +46,6 @@ void Network::NetTrain(std::vector<double> Input, std::vector<double> Teacher, d
 	Net[Net.size() - 1].LastLayerTrain(Teacher, SpeedTrain);
 	for (unsigned int i = Net.size() - 1; i > 0; i--)
 	{
-		std::cout << i << std::endl;
-		Net[i - 1].HiddenLayerTrain(Net[i].TransferMistakeOutput(), SpeedTrain);
+		Net[i - 1].HiddenLayerTrain(Net[i].TransferMistakeOutputOutput(), SpeedTrain);
 	}
 }

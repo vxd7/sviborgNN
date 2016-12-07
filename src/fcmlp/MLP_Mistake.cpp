@@ -1,4 +1,5 @@
 #include "MLP_Mistake.h"
+#include <iostream>
 std::vector<std::vector<double>> MistakeWeights(double SpeedTrain, std::vector<double> Mistake, std::vector<double> BeforeOutput)
 {
 	std::vector<std::vector<double>> data(Mistake.size());

@@ -14,6 +14,7 @@ private:
 	std::vector<double> Output;
 	std::vector<double> DerivativeOutput;
 	std::vector<double> MistakeOutput;
+	std::vector<double> MistakeOutputOutput;
 	std::vector<std::vector<double>> DeltaWeights;
 	std::vector<double> DeltaBias;
 public:
@@ -28,5 +29,5 @@ public:
 	std::vector<double> TransferOutput();
 	void LastLayerTrain(std::vector<double> Teacher, double SpeedTrain);
 	void HiddenLayerTrain(std::vector<double> MistakeBeforeLayer, double SpeedTrain);
-	std::vector<double> Layer::TransferMistakeOutput();
+	std::vector<double> Layer::TransferMistakeOutputOutput();
 };
