@@ -131,8 +131,8 @@ void ConvNeuron::subsampleMap( std::vector<std::vector<double>> &inputMap) {
         std::vector<double> zero(inputMapWidth);
         inputMap.push_back(zero);
     }
-	for(size_t i = 0; i < inputMapHeight; i += 2, fmapi++) {
-		for(size_t j = 0; j < inputMapWidth; j += 2, fmapj++) {
+	for(size_t i = 0; i < inputMapHeight-1; i += 2, fmapi++) {
+		for(size_t j = 0; j < inputMapWidth-1; j += 2, fmapj++) {
 			double summ;
 			summ = inputMap[i][j] + inputMap[i + 1][j] + inputMap[i][j + 1] + inputMap[i + 1][j + 1];
 			summ *= subsampleCoeff;
@@ -143,6 +143,7 @@ void ConvNeuron::subsampleMap( std::vector<std::vector<double>> &inputMap) {
 		}
         fmapj = 0;
 	}
+   
 }
 
 double ConvNeuron::summate(const std::vector <std::vector<double>> &inputMap, int ipos, int jpos) {
