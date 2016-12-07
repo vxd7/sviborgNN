@@ -1,7 +1,7 @@
 #include <vector>
 #include <cmath>    //exp()
 #include <stdlib.h> //rand()
-
+#include <ctime>
 #include "ConvNeuron.h"
 
 // we can write height, length in the file of weights in the begining and read them from it;
@@ -100,7 +100,7 @@ void ConvNeuron::processSingleMap(const std::vector <std::vector<double>> &input
 
 			fmapj++; 
 		}
-
+        fmapj = 0;
 		fmapi++;
 	}
 }
@@ -134,12 +134,14 @@ void ConvNeuron::subsampleMap(const std::vector<std::vector<double>> &inputMap) 
 
 double ConvNeuron::summate(const std::vector <std::vector<double>> &inputMap, int ipos, int jpos) {
     double summ = 0;
-
-    for (int i = 0; i < coreHeight; i++, ipos++){
-        for (int j = 0; j < coreWidth; j++, jpos++){
+    int k=ipos, m=jpos;
+    for (int i = 0; i < coreHeight; i++, k++){
+        for (int j = 0; j < coreWidth; j++, m++){
             summ = summ + inputMap[ipos][jpos] * convCore[i][j];
 
         }
+        m = jpos;
+
     }
 
     return summ;
@@ -153,7 +155,7 @@ double ConvNeuron::tFunc(double x) {
 }
 
 void ConvNeuron::randomizeCores() {
-
+    //srand(time(NULL));
     for (int i = 0; i < coreHeight; i++) {
         for (int j = 0; j < coreWidth; j++) {
             convCore[i][j] = (double)rand() / (double)(RAND_MAX)* 1.0 - 0.5;

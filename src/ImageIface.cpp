@@ -6,7 +6,7 @@
 #include <fstream>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "C:\Users\Gleb\Desktop\stb_image.h"
 
 //https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
 void ImageIface::getImageList(std::vector<std::string> &imageList) {
