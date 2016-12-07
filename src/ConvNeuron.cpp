@@ -71,7 +71,7 @@ void ConvNeuron::processMaps(const std::vector<std::vector <std::vector<double>>
 
 			fmapj++; 
 		}
-
+        fmapj = 0;
 		fmapi++;
 	}
 
@@ -105,7 +105,7 @@ void ConvNeuron::processSingleMap(const std::vector <std::vector<double>> &input
 	}
 }
 
-void ConvNeuron::subsampleMap(const std::vector<std::vector<double>> &inputMap) {
+void ConvNeuron::subsampleMap( std::vector<std::vector<double>> &inputMap) {
 	size_t inputMapHeight = inputMap.size();
 	size_t inputMapWidth = inputMap[0].size();
 
@@ -118,7 +118,19 @@ void ConvNeuron::subsampleMap(const std::vector<std::vector<double>> &inputMap) 
     for (int i = 0; i < outputFeatureMap.size(); i++) {
         outputFeatureMap[i].resize(inputMapWidth - (subMapWidth- 1));
     }
-
+    // if map dimensions are not even then add zero vectors;
+    if (inputMapWidth % 2 != 0) {
+        inputMapWidth++;
+        
+        for (int i = 0; i < inputMapHeight; ++i) {
+            inputMap[i].push_back(0.0);
+        }
+    }
+    if (inputMapHeight % 2 != 0) {
+        inputMapHeight++;
+        std::vector<double> zero(inputMapWidth);
+        inputMap.push_back(zero);
+    }
 	for(size_t i = 0; i < inputMapHeight; i += 2, fmapi++) {
 		for(size_t j = 0; j < inputMapWidth; j += 2, fmapj++) {
 			double summ;
@@ -129,6 +141,7 @@ void ConvNeuron::subsampleMap(const std::vector<std::vector<double>> &inputMap) 
 			summ = tFunc(summ);
 			outputFeatureMap[fmapi][fmapj] = summ;
 		}
+        fmapj = 0;
 	}
 }
 
@@ -155,7 +168,7 @@ double ConvNeuron::tFunc(double x) {
 }
 
 void ConvNeuron::randomizeCores() {
-    //srand(time(NULL));
+    srand(time(NULL));
     for (int i = 0; i < coreHeight; i++) {
         for (int j = 0; j < coreWidth; j++) {
             convCore[i][j] = (double)rand() / (double)(RAND_MAX)* 1.0 - 0.5;

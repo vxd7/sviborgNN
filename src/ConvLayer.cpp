@@ -69,6 +69,18 @@ void ConvLayer::computeFeatureMaps(std::vector<std::vector<std::vector<double>>>
 	 * Construct packets of feature maps 
 	 * according to the adjacency table adjMatrix
 	 */
+    static const int arr1[] = { 1, 0, 1, 1 };
+    std::vector<bool> vec1(arr1, arr1 + sizeof(arr1) / sizeof(arr1[0]));
+    static const int arr2[] = { 1, 1, 0, 1 };
+    std::vector<bool> vec2(arr2, arr2 + sizeof(arr2) / sizeof(arr2[0]));
+    static const int arr3[] = { 0, 1, 1, 0 };
+    std::vector<bool> vec3(arr1, arr1 + sizeof(arr1) / sizeof(arr1[0]));
+
+
+    adjMatrix.push_back(vec1);
+    adjMatrix.push_back(vec2);
+    adjMatrix.push_back(vec3);
+
 	for(size_t i = 0; i < numberOfNeurons; ++i) {
 		std::vector<std::vector<std::vector<double>>> neuronPacket;
 

@@ -105,7 +105,7 @@ void ConvNetwork::processInputMap(int inputMapNumber, std::vector <double> &outp
 }
 
 void ConvNetwork::processInputMap(std::vector <double> &outputMap) {
-	processInputMap(0, outputMap);
+     processInputMap(0, outputMap);
 }
 
 void ConvNetwork::getInput(std::string imageListFile) {
