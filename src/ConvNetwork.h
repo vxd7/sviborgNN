@@ -10,6 +10,7 @@ class ConvNetwork
 {
 private:
     int numLayers;
+    int numLayeroutput;
     double learningSpeed;
     std::vector <double> desiredOutputMap;
 	std::vector <ConvLayer> networkLayers;
