@@ -114,11 +114,18 @@ void ConvNeuron::subsampleMap( std::vector<std::vector<double>> &inputMap) {
 	size_t subMapHeight = 2, subMapWidth = 2;
 
     // set up the outputFeatureMap size;
+    if ((inputMapHeight - (subMapHeight - 1)) >= 1 || (inputMapWidth - (subMapWidth - 1)) >= 1){
     outputFeatureMap.resize(inputMapHeight - (subMapHeight- 1));
     for (int i = 0; i < outputFeatureMap.size(); i++) {
-        outputFeatureMap[i].resize(inputMapWidth - (subMapWidth- 1));
+        outputFeatureMap[i].resize(inputMapWidth - (subMapWidth - 1));
     }
-    // if map dimensions are not even then add zero vectors;
+    }
+    else
+    {
+        outputFeatureMap.resize(1);
+        outputFeatureMap[0].resize(1);
+    }
+        // if map dimensions are not even then add zero vectors;
     if (inputMapWidth % 2 != 0) {
         inputMapWidth++;
         

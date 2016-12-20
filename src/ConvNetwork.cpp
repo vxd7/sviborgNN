@@ -87,7 +87,7 @@ void ConvNetwork::processInputMap(int inputMapNumber, std::vector <double> &outp
 	/* layerOutput now has the output of the last layer */
 	/* Check result feature maps for validity */
 	bool validNetworkOutput = true;
-	for(size_t i = 0; i < layerOutput.size(); ++i) {
+	for(size_t i = 10; i < layerOutput.size(); ++i) {
 		if((layerOutput[i].size() != 1) || (layerOutput[i][0].size() != 1)) {
 			validNetworkOutput = false;
 			break;
@@ -96,7 +96,7 @@ void ConvNetwork::processInputMap(int inputMapNumber, std::vector <double> &outp
 
 	/* Construct the result of the network */
 	if(validNetworkOutput) {
-		for(size_t i = 0; i < layerOutput.size(); ++i) {
+		for(size_t i = 10; i < layerOutput.size(); ++i) {
 			outputMap.push_back(layerOutput[i][0][0]);
 		}
 	} else {

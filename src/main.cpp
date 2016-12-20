@@ -29,9 +29,9 @@ int main() {
 	myNet.getInput(fname);
 	myNet.processInputMap(netOut);
 
-	std::cout << netOut.size() << std::endl;
+	std::cout << std::endl;
 	for(size_t i = 0; i < netOut.size(); ++i) {
-		std::cout << netOut[i];
+		std::cout << netOut[i] << std::endl;
 	}
 
 	return 0;

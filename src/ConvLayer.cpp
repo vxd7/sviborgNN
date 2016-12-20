@@ -86,7 +86,7 @@ void ConvLayer::computeFeatureMaps(std::vector<std::vector<std::vector<double>>>
 
 		for(size_t j = 0; j < adjMatrix.size(); ++j) {
 			if(adjMatrix[j][i]) {
-				neuronPacket.push_back(inputMap[j]);
+				neuronPacket.push_back(inputMap[inputMap.size()-numberOfNeurons+j+1]);
 			}
 		}
 
@@ -96,15 +96,17 @@ void ConvLayer::computeFeatureMaps(std::vector<std::vector<std::vector<double>>>
 }
 
 void ConvLayer::computeFeatureMap(std::vector<std::vector<double>> &inputMap) {
-	for(size_t i = 0; i < numberOfNeurons; ++i) {
-		neurons[i].processSingleMap(inputMap);
+    int j;
+    for (size_t i = inputMap.size() - numberOfNeurons, j = 0; i < inputMap.size(); ++i, ++j) {
+        neurons[j].processSingleMap(inputMap);
 	}
 	
 }
 
 void ConvLayer::subsampleFeatureMaps(std::vector<std::vector<std::vector<double>>> &inputMap) {
-	for(size_t i = 0; i < numberOfNeurons; ++i) {
-		neurons[i].subsampleMap(inputMap[i]);
+    int j;
+	for(size_t i = inputMap.size()-numberOfNeurons,j = 0; i < inputMap.size(); ++i,++j) {
+		neurons[j].subsampleMap(inputMap[i]);
 	}
 }
 
