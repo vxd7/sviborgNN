@@ -9,7 +9,7 @@ std::vector<double> InitializationBias(int size)
 	std::vector<double> bias(size);
 	for (int i = 0; i < size; i++)
 	{
-		bias[i] = (1 + rand() % 20000 - 10000) / 10000.0;
+		bias[i] = (1 + rand() % 20000 - 10000) / 20000.0;
 	}
 	return bias;
 }
@@ -48,7 +48,7 @@ std::vector<std::vector<double>> InitializationWeights(int ncols, int nrows)
 	{
 		for (int j = 0; j < ncols; ++j)
 		{
-			weights[i][j] = (1 + rand() % 20000 - 10000) / 10000.0;
+			weights[i][j] = (1 + rand() % 20000 - 10000) / 20000.0;
 		}
 	}
 	return weights;
