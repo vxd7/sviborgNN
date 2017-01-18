@@ -158,7 +158,7 @@ double ConvNeuron::summate(const std::vector <std::vector<double>> &inputMap, in
     int k=ipos, m=jpos;
     for (int i = 0; i < coreHeight; i++, k++){
         for (int j = 0; j < coreWidth; j++, m++){
-            summ = summ + inputMap[ipos][jpos] * convCore[i][j];
+            summ = summ + inputMap[k][m] * convCore[i][j];
 
         }
         m = jpos;
@@ -169,7 +169,7 @@ double ConvNeuron::summate(const std::vector <std::vector<double>> &inputMap, in
 }
 
 double ConvNeuron::tFunc(double x) {
-    double a = 1.0;//= value?
+    double a = 0.1;//= value?
     double Func = 1 / (1 + exp(-1 * x*a));
 
     return Func;

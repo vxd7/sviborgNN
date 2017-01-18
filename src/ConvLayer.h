@@ -95,6 +95,7 @@ private:
 	 */
 	void updateAllCoresFromFiles(std::string fileNamePrefix);
 
+	void ReadAdjMatrix(std::string filename);
 
 
 public:

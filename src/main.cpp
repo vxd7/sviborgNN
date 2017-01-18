@@ -25,7 +25,7 @@ int main() {
 
 	ConvNetwork myNet(nl, dims);
 
-	std::string fname = "./imgList.txt";
+	std::string fname = "imgList.txt";
 	myNet.getInput(fname);
 	myNet.processInputMap(netOut);
 

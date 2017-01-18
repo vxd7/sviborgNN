@@ -6,7 +6,7 @@
 #include <fstream>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "C:\Users\Gleb\Desktop\stb_image.h"
+#include "stb_image.h"
 
 //https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
 void ImageIface::getImageList(std::vector<std::string> &imageList) {
@@ -25,9 +25,9 @@ void ImageIface::getImageList(std::vector<std::string> &imageList) {
         catch (const std::ifstream::failure& e) {
             std::cerr << "Exception opening/reading file -- index " << i + 1;
         }
-        map.close();
+       
     }
-  
+   map.close();
 }
 
 void ImageIface::computeGrayscaleMatrix(std::string filename, std::vector <std::vector <double>> &imageMatrix) {
@@ -102,7 +102,7 @@ void ImageIface::normalizeImageMatrix(std::vector<std::vector<double>> &imageMat
     int w = imageMatrix[0].size();
     std::vector <double> zero(w_max);
     for (int i = 0; i < h; ++i) {
-        for (int j = w; j < w_max - w; ++j) {
+        for (int j = 0; j < w_max - w; ++j) {
             imageMatrix[i].push_back(0.0);
         }
     }
