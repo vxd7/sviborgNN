@@ -106,7 +106,8 @@ void ConvNetwork::processInputMap(int inputMapNumber, std::vector <double> &outp
 }
 
 void ConvNetwork::processInputMap(std::vector <double> &outputMap) {
-     processInputMap(0, outputMap);
+    //definetly need a loop! 
+	processInputMap(2, outputMap);
 }
 
 void ConvNetwork::getInput(std::string imageListFile) {
@@ -138,4 +139,5 @@ void ConvNetwork::getInput(std::string imageListFile) {
 
 	inputImages.getImageList(imageList);
 	inputImages.normalizeEverything();
+
 }
