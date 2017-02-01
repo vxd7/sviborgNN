@@ -16,6 +16,7 @@ private:
 
 	double subsampleCoeff;
 	double neuronBias;
+	double exponentThresholdFunction;
 
 public:
 	SubsampleNeuron(ConfigManager& cfg, std::string sectionName);
@@ -23,6 +24,7 @@ public:
 	void subsampleMap(std::vector<std::vector<double>>& inputMap);
 
 	std::vector<std::vector<double>>& getOuputMap();
+    double tFunc(double x);
 
 	int outputMapHeight;
 	int outputMapWidth;

@@ -65,6 +65,7 @@ void SubsampleNeuron::subsampleMap(std::vector<std::vector<double>>& inputMap) {
 }
 
 double SubsampleNeuron::tFunc(double x) {
+	x /= 255.0;
     double res = 1.0 / (1.0 + exp((-1.0) * x*exponentThresholdFunction));
 
     return res;
