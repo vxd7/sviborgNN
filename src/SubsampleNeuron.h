@@ -2,14 +2,20 @@
 
 #include <vector>
 #include <string>
+
+#include "ConfigManager.h"
 class SubsampleNeuron {
 private:
 	std::vector<std::vector<double>> outputFeatureMap;
 
-	int inputMapHeight;
-	int inputMapWidth;
+	/* These are standart values and cannot be overriden
+	 * See Yan LeKunn works for more info */
+	const int subsampleMapHeight = 2;
+	const int subsampleMapWidth = 2;
+
 
 	double subsampleCoeff;
+	double neuronBias;
 
 public:
 	SubsampleNeuron(ConfigManager& cfg, std::string sectionName);
