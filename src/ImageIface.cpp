@@ -8,6 +8,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#define NORMCOEFF 255.0
+
 //https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
 void ImageIface::getImageList(std::vector<std::string> &imageList) {
 	std::ifstream map;
@@ -50,6 +52,12 @@ void ImageIface::computeGrayscaleMatrix(std::string filename, std::vector <std::
     if (w < w_max || h < h_max) {
         normalizeImageMatrix(imageMatrix);
     }
+	for (int i = 0; i < imageMatrix.size(); ++i) {
+		for (int j = 0; j < imageMatrix[i].size(); ++j) {
+			imageMatrix[i][j] /= NORMCOEFF;
+		}
+	}
+	
 	stbi_image_free(map);
 }
 
