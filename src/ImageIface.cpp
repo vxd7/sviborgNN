@@ -52,6 +52,7 @@ void ImageIface::computeGrayscaleMatrix(std::string filename, std::vector <std::
     if (w < w_max || h < h_max) {
         normalizeImageMatrix(imageMatrix);
     }
+	// normalization
 	for (int i = 0; i < imageMatrix.size(); ++i) {
 		for (int j = 0; j < imageMatrix[i].size(); ++j) {
 			imageMatrix[i][j] /= NORMCOEFF;
