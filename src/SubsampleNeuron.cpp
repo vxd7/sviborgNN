@@ -19,19 +19,6 @@ void SubsampleNeuron::subsampleMap(std::vector<std::vector<double>>& inputMap) {
 	size_t inputMapHeight = inputMap.size();
 	size_t inputMapWidth = inputMap[0].size();
 
-	outputMapHeight = inputMapHeight - (subsampleMapHeight- 1);
-	outputMapWidth = inputMapWidth - (subsampleMapWidth- 1);
-
-    // set up the outputFeatureMap size;
-    if ((outputMapWidth >= 1) && (outputMapHeight >= 1)) {
-		outputFeatureMap.resize(outputMapHeight);
-		for (int i = 0; i < outputFeatureMap.size(); i++) {
-			outputFeatureMap[i].resize(outputMapWidth);
-		}
-    } else {
-		throw InvalidResultArrayDimensionException;
-	}
-
 	// if map dimensions are not even then add zero vectors;
     if (inputMapWidth % 2 != 0) {
         inputMapWidth++;
@@ -46,6 +33,20 @@ void SubsampleNeuron::subsampleMap(std::vector<std::vector<double>>& inputMap) {
         std::vector<double> zero(inputMapWidth);
         inputMap.push_back(zero);
     }
+
+	outputMapHeight = inputMapHeight/2;
+	outputMapWidth = inputMapWidth/2;
+
+    // set up the outputFeatureMap size;
+    if ((outputMapWidth >= 1) && (outputMapHeight >= 1)) {
+		outputFeatureMap.resize(outputMapHeight);
+		for (int i = 0; i < outputFeatureMap.size(); i++) {
+			outputFeatureMap[i].resize(outputMapWidth);
+		}
+    } else {
+		throw InvalidResultArrayDimensionException;
+	}
+
 
 	size_t fmapi = 0, fmapj = 0;
 
