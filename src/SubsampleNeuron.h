@@ -24,7 +24,7 @@ public:
 	void subsampleMap(std::vector<std::vector<double>>& inputMap);
 
 	std::vector<std::vector<double>>& getOuputMap();
-    double tFunc(double x);
+    double sigmoidTresholdFunc(const double& x);
 
 	int outputMapHeight;
 	int outputMapWidth;

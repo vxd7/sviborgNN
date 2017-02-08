@@ -57,7 +57,7 @@ void SubsampleNeuron::subsampleMap(std::vector<std::vector<double>>& inputMap) {
 			summ *= subsampleCoeff;
 			summ += neuronBias;
 
-			summ = tFunc(summ);
+			summ = sigmoidTresholdFunc(summ);
 			outputFeatureMap[fmapi][fmapj] = summ;
 		}
         fmapj = 0;
@@ -65,10 +65,16 @@ void SubsampleNeuron::subsampleMap(std::vector<std::vector<double>>& inputMap) {
 	
 }
 
-double SubsampleNeuron::tFunc(double x) {
-	x /= 255.0;
+/* Treshold function
+ * x - normalized signal from neuron
+ * -1 <= x <= 1
+ */
+double SubsampleNeuron::sigmoidTresholdFunc(const double& x) {
+	if((x < -1.0) || (x > 1.0)) {
+		throw std::domain_error("Invalid argument range in sigmoidal neuron treshold function");
+	}
+	
     double res = 1.0 / (1.0 + exp((-1.0) * x*exponentThresholdFunction));
-
     return res;
 }
 
