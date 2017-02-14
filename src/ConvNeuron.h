@@ -17,6 +17,11 @@ public:
 	void GetOutput(MATRIX &tmp);
 
 	void Convolute(const MATRIX &InputMap);
+
+	void ProcessMaps(const TRIPLET &inputMaps);
+
+	void ResizeOutput(int InputMapHeight, int InputMapWidth);
+
 private:
 	MATRIX ConvCore;
 	MATRIX OutputMap;

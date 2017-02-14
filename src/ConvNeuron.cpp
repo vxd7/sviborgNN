@@ -63,18 +63,16 @@ void ConvNeuron::WriteCoreToFile(ConfigManager &cfg, std::string sectionName, st
 	}
 }
 
-void ConvNeuron::Convolute(const MATRIX &InputMap) {
+void ConvNeuron::Convolute(const MATRIX &InputMap) {	
 
-	//resizing output feature map
-	OutputMap.resize(InputMap.size() - convMatrixHeight + 1);
-	for (int i = 0; i < OutputMap.size(); ++i) {
-		OutputMap[i].resize(InputMap[i].size() - convMatrixWidth + 1);
-	}
+	int inputMapHeight = InputMap.size();
+	int inputMapWidth = InputMap[0].size();
 
+	ResizeOutput(inputMapHeight, inputMapWidth);
 	// convolution
 	for (int i = 0; i < OutputMap.size(); ++i) {
 		for (int j = 0; j < OutputMap[i].size(); ++j) {
-			double summ;
+			double summ = 0;
 			summ = summate(InputMap,i,j);
 			summ = tFunc(summ);
 			summ += bias;
@@ -100,6 +98,43 @@ double ConvNeuron::tFunc(double x) {
 	return (10000 * tanh(x)) / 7615; // 10000/7615 coeff is amplitude which makes equalities f(1)=1 and f(-1)=-1 satisfied
 }
 
+void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps) {
+
+	double sectorSumm = 0;
+
+	int inputMapHeight = inputMaps[0].size();
+	int inputMapWidth = inputMaps[0][0].size();
+
+	ResizeOutput(inputMapHeight, inputMapWidth);
+
+	
+		for (int j = 0; j < OutputMap.size(); ++j) {
+			for (int k = 0; k < OutputMap[j].size(); ++k) {
+				for (int i = 0; i < inputMaps.size(); ++i) {
+					double summ = 0;
+					summ = summate(inputMaps[i], i, j);
+					summ = tFunc(summ);
+					summ += bias;
+					sectorSumm += summ;
+				}
+				OutputMap[j][k] += sectorSumm;
+			}
+
+		}
+	
+
+
+}
+
+
+void ConvNeuron::ResizeOutput(int InputMapHeight, int InputMapWidth) {
+	//resizing output feature map
+	OutputMap.resize(InputMapHeight - convMatrixHeight + 1);
+	for (int i = 0; i < OutputMap.size(); ++i) {
+		OutputMap[i].resize(InputMapWidth - convMatrixWidth + 1);
+	}
+
+}
 void ConvNeuron::GetOutput(MATRIX &tmp) {
 	tmp = OutputMap;
 }
