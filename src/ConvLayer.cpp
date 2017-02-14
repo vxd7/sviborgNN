@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <stdexcept>
+#include <iostream>
 
 #include "ConvLayer.h"
 
@@ -89,6 +90,7 @@ void ConvLayer::computeFeatureMaps(std::vector<std::vector<std::vector<double>>>
 	* Construct packets of feature maps
 	* according to the adjacency table adjMatrix
 	*/
+	std::cout << "creating an AdjMatrix" << std::endl;
 	static const int arr1[] = { 1, 0, 1, 1 };
 	std::vector<bool> vec1(arr1, arr1 + sizeof(arr1) / sizeof(arr1[0]));
 	static const int arr2[] = { 1, 1, 0, 1 };
@@ -103,7 +105,7 @@ void ConvLayer::computeFeatureMaps(std::vector<std::vector<std::vector<double>>>
 
 	//std::string filename;//adjMatrix filename;
 	//ReadAdjMatrix(filename);
-
+	std::cout << "creating a neuron packets" << std::endl;
 	for (size_t i = 0; i < numberOfNeurons; ++i) {
 		std::vector<std::vector<std::vector<double>>> neuronPacket;
 
@@ -112,7 +114,7 @@ void ConvLayer::computeFeatureMaps(std::vector<std::vector<std::vector<double>>>
 				neuronPacket.push_back(inputMap[inputMap.size() - numberOfNeurons + j + 1]);
 			}
 		}
-
+		std::cout << "void ConvNeuron::processMaps(const std::vector<std::vector <std::vector<double>>> &inputMaps)" << std::endl;
 		neurons[i].processMaps(neuronPacket);
 	}
 
@@ -121,6 +123,7 @@ void ConvLayer::computeFeatureMaps(std::vector<std::vector<std::vector<double>>>
 void ConvLayer::computeFeatureMap(std::vector<std::vector<double>> &inputMap) {
 	int j;
 	for (size_t i = inputMap.size() - numberOfNeurons, j = 0; i < inputMap.size(); ++i, ++j) {
+		std::cout << "void ConvNeuron::processSingleMap(const std::vector <std::vector<double>> &inputMap)" << std::endl;
 		neurons[j].processSingleMap(inputMap);
 	}
 
@@ -129,6 +132,7 @@ void ConvLayer::computeFeatureMap(std::vector<std::vector<double>> &inputMap) {
 void ConvLayer::subsampleFeatureMaps(std::vector<std::vector<std::vector<double>>> &inputMap) {
 	int j;
 	for (size_t i = inputMap.size() - numberOfNeurons, j = 0; i < inputMap.size(); ++i, ++j) {
+		std::cout << "void ConvNeuron::subsampleMap(std::vector<std::vector<double>> &inputMap)" << std::endl;
 		neurons[j].subsampleMap(inputMap[i]);
 	}
 }

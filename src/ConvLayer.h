@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "ConvNeuron.h"
+#include "ConvNeuron_1.h"
 // #include "Log.h"
 
 enum LayerType {

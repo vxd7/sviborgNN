@@ -26,8 +26,12 @@ int main() {
 	ConvNetwork myNet(nl, dims);
 
 	std::string fname = "imgList.txt";
+	std::cout << "ConvNetwork::getInput(std::string imageListFile)" << std::endl;
 	myNet.getInput(fname);
+	
+	std::cout << "ConvNetwork::processInputMap(std::vector <double> &outputMap) " << std::endl;
 	myNet.processInputMap(netOut);
+	
 
 	std::cout << std::endl;
 	for(size_t i = 0; i < netOut.size(); ++i) {

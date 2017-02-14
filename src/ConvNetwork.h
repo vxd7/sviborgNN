@@ -14,6 +14,7 @@ private:
     double learningSpeed;
     std::vector <double> desiredOutputMap;
 	std::vector <ConvLayer> networkLayers;
+	std::vector<int> NIL;//neurons in layers
 
 	ImageIface inputImages;
 public:
