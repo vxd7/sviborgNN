@@ -1,52 +1,38 @@
 #pragma once
+#include <string>
 #include <vector>
+#include "ConfigManager.h"
 
-class ConvLayer;
+#define MATRIX  std::vector<std::vector<double>>
+#define TRIPLET std::vector<std::vector< std::vector<double>>>
 
 class ConvNeuron {
-private:
-    std::vector<std::vector<double>> convCore;
-    std::vector<std::vector<double>> outputFeatureMap; //Out of the neuron
-
-    double aWeight;
-
-    int coreHeight, coreWidth;
-
-    bool random;
-    void randomizeCores();
-
-	double neuronBias = 1.0; // !!!
-	double subsampleCoeff = 1.0;
-
-    double summate(const std::vector <std::vector<double>> &inputMap, int ipos, int jpos); // may be this is shit, but i wanted to optimise the code;
-    double tFunc(double x);
-
-	/******************
-	 * Misc functions *
-	 ******************/
-
-	/**
-	 * Unloads the output feature map of the neuron
-	 * For the better memory management
-	 */
-	void unloadFeatureMap();
-
 public:
-	// TODO: change hardcoded true
-    ConvNeuron(int newCoreHeight, int newCoreWidth, bool isRand = true); // random weights if isRand = true, else pushback 0.0;
+	// Convolutional Neuron constructor. Type: public. 
+	// newCoreHeight, newCoreWidth - conv.cores dimensions. 
+	// isRand - flag for initialization random values.
+	ConvNeuron(ConfigManager& cfg, std::string SectionName, std::string configFiledName, bool isRand = false);
+	ConvNeuron(int dimHeigth, int dimWidth);
 
-	ConvNeuron();
+	void GetOutput(MATRIX &tmp);
 
-    void processMaps(const std::vector<std::vector <std::vector<double>>> &inputMaps); // creating an output feautureMap;
+	void Convolute(const MATRIX &InputMap);
 
-    void processSingleMap(const std::vector <std::vector<double>> &inputMap); // creating an output feautureMap;
+	void ProcessMaps(const TRIPLET &inputMaps);
 
-	void subsampleMap(std::vector<std::vector<double>> &inputMap);
+	void ResizeOutput(int InputMapHeight, int InputMapWidth);
 
-    void initNeuron(); // empty for now;
+private:
+	MATRIX ConvCore;
+	MATRIX OutputMap;
+	int convMatrixHeight, convMatrixWidth;
+	double bias = 1.0;
 
-	void changeBias(double newNeuronBias);
-	void changeSubsCoeff(double newSubsCoeff);
+	void RandomizeCores();
 
-	friend ConvLayer;
+	void WriteCoreToFile(ConfigManager &cfg, std::string sectionName, std::string configFiledName);
+	
+	double summate(const MATRIX &InputMap, int ipos, int jpos);
+	
+	double tFunc(double x);
 };

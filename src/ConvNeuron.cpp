@@ -1,200 +1,140 @@
-#include <vector>
-#include <cmath>    //exp()
-#include <stdlib.h> //rand()
-#include <ctime>
 #include "ConvNeuron.h"
+#include "ConfigManager.h"
+#include <string>
+#include <vector>
+#include <fstream>
+#include <ctime>
+#include <math.h>
+#include <iostream>
 
-// we can write height, length in the file of weights in the begining and read them from it;
-ConvNeuron::ConvNeuron(int newCoreHeight, int newCoreWidth, bool isRand /* = false*/) {
-    
-    random = isRand;
-    coreHeight = newCoreHeight;
-    coreWidth = newCoreWidth;
 
-	neuronBias = 1.0;
-	subsampleCoeff = 1.0;
-
-    convCore.resize(coreHeight);
-    for (int i = 0; i < coreHeight; i++) {
-        convCore[i].assign(coreWidth,0.0);
-    }
-
-    if (random) {
-        randomizeCores();
-    }
+ConvNeuron::ConvNeuron(ConfigManager &cfg, std::string sectionName, std::string configFiledName, bool isRand) {
+	std::string filename;
+	//read dimensions;
+	cfg.getVal(sectionName, "convMatrixHeight", convMatrixHeight);
+	cfg.getVal(sectionName, "convMatrixWidth", convMatrixWidth);
+	//get filename with values;
+	cfg.getVal(sectionName,configFiledName,filename);
+	std::ifstream VALS;
+	VALS.open(filename, std::ios::in);
+	ConvCore.resize(convMatrixHeight);
+	if (isRand) {
+		for (int i = 0; i < convMatrixHeight; ++i) {
+			double num;
+			for (int j = 0; j < convMatrixWidth; ++j) {
+				VALS >> num;
+				ConvCore[i].push_back(num);
+			}
+		}
+	}
+	else
+		RandomizeCores();
+	VALS.close();
 }
-ConvNeuron::ConvNeuron() {
-	
+
+ConvNeuron::ConvNeuron(int dimHeigth, int dimWidth) {
+	convMatrixHeight = dimHeigth;
+	convMatrixWidth = dimWidth;
+	RandomizeCores();
 }
 
-void ConvNeuron::initNeuron() { 
-    //here we can put randomization (instead of using it in constructor), and getting weights from the FILE with function getCore;
+
+void ConvNeuron::RandomizeCores() {
+	srand(time(NULL));
+	ConvCore.resize(convMatrixHeight);
+	for (int i = 0; i < convMatrixHeight; ++i) {
+		for (int j = 0; j < convMatrixWidth; ++j) {
+			double a = ((double)rand()/ (double)(RAND_MAX)*4.8 - 2.4)/(convMatrixHeight*convMatrixWidth); // following Le Cun instructions
+			ConvCore[i].push_back(a);
+		}
+	}
 }
 
-void ConvNeuron::processMaps(const std::vector<std::vector <std::vector<double>>> &inputMaps) {
+void ConvNeuron::WriteCoreToFile(ConfigManager &cfg, std::string sectionName, std::string configFiledName) {
+	std::ofstream FILE;
+	std::string filename;
+	cfg.getVal(sectionName, sectionName, filename);
+	FILE.open(filename);
+	for (int i = 0; i < convMatrixHeight; ++i) {
+		for (int j = 0; j < convMatrixWidth; ++j) {
+			FILE << ConvCore[i][j] << ' ';
+		}
+		FILE << std::endl;
+	}
+}
 
-	std::vector <double> mapSums;
+void ConvNeuron::Convolute(const MATRIX &InputMap) {	
 
-    int fmapi = 0, fmapj = 0;
+	int inputMapHeight = InputMap.size();
+	int inputMapWidth = InputMap[0].size();
 
-	int inputMapsCount = inputMaps.size();
+	ResizeOutput(inputMapHeight, inputMapWidth);
+	// convolution
+	for (int i = 0; i < OutputMap.size(); ++i) {
+		for (int j = 0; j < OutputMap[i].size(); ++j) {
+			double summ = 0;
+			summ = summate(InputMap,i,j);
+			summ = tFunc(summ);
+			summ += bias;
+			OutputMap[i][j] = summ;
+		}
+	}
+
+
+}
+
+double ConvNeuron::summate(const MATRIX &InputMap, int ipos, int jpos) {
+	double summ = 0;
+	for (int i = 0; i < convMatrixHeight; ++i) {
+		for (int j = 0; j < convMatrixWidth; ++j) {
+			summ += InputMap[i+ipos][j+jpos]*ConvCore[i][j];
+		}
+	}
+	return summ;
+}
+
+double ConvNeuron::tFunc(double x) {	
+	/*double a =(10000*tanh(-1))/7615;*/
+	return (10000 * tanh(x)) / 7615; // 10000/7615 coeff is amplitude which makes equalities f(1)=1 and f(-1)=-1 satisfied
+}
+
+void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps) {
+
+	double sectorSumm = 0;
 
 	int inputMapHeight = inputMaps[0].size();
 	int inputMapWidth = inputMaps[0][0].size();
 
-    // set up the featureMap size;
-    outputFeatureMap.resize(inputMapHeight - (coreHeight - 1));
-    for (int i = 0; i < outputFeatureMap.size(); i++) {
-        outputFeatureMap[i].resize(inputMapWidth - (coreWidth - 1));
-    }
+	ResizeOutput(inputMapHeight, inputMapWidth);
 
-    // convolution;
 	
-	for (int i = 0; (i + coreHeight) < inputMapHeight; ++i) {
-		for (int j = 0; (j + coreWidth) < inputMapWidth; ++j) {
-
-			for(int k = 0; k < inputMapsCount; ++k) {
-				double summ;
-
-				summ = summate(inputMaps[k], i, j);
-				summ = tFunc(summ);
-				mapSums.push_back(summ);
+		for (int j = 0; j < OutputMap.size(); ++j) {
+			for (int k = 0; k < OutputMap[j].size(); ++k) {
+				for (int i = 0; i < inputMaps.size(); ++i) {
+					double summ = 0;
+					summ = summate(inputMaps[i], i, j);
+					summ = tFunc(summ);
+					summ += bias;
+					sectorSumm += summ;
+				}
+				OutputMap[j][k] += sectorSumm;
 			}
 
-			double pixelSum = 0.0;
-			for(int m = 0; m < mapSums.size(); ++m) {
-				pixelSum += mapSums[m];
-			}
-
-			outputFeatureMap[fmapi][fmapj] = pixelSum;
-			mapSums.clear();
-
-			fmapj++; 
 		}
-        fmapj = 0;
-		fmapi++;
+	
+
+
+}
+
+
+void ConvNeuron::ResizeOutput(int InputMapHeight, int InputMapWidth) {
+	//resizing output feature map
+	OutputMap.resize(InputMapHeight - convMatrixHeight + 1);
+	for (int i = 0; i < OutputMap.size(); ++i) {
+		OutputMap[i].resize(InputMapWidth - convMatrixWidth + 1);
 	}
 
 }
-
-void ConvNeuron::processSingleMap(const std::vector <std::vector<double>> &inputMap) {
-	int fmapi = 0, fmapj = 0;
-
-	int inputMapHeight = inputMap.size();
-	int inputMapWidth = inputMap[0].size();
-
-    // set up the featureMap size;
-    outputFeatureMap.resize(inputMapHeight - (coreHeight - 1));
-    for (int i = 0; i < outputFeatureMap.size(); i++) {
-        outputFeatureMap[i].resize(inputMapWidth - (coreWidth - 1));
-    }
-
-	for (int i = 0; (i + coreHeight) < inputMapHeight; ++i) {
-		for (int j = 0; (j + coreWidth) < inputMapWidth; ++j) {
-			double summ;
-
-			summ = summate(inputMap, i, j);
-			summ = tFunc(summ);
-
-			outputFeatureMap[fmapi][fmapj] = summ;
-
-			fmapj++; 
-		}
-        fmapj = 0;
-		fmapi++;
-	}
-}
-
-void ConvNeuron::subsampleMap( std::vector<std::vector<double>> &inputMap) {
-	size_t inputMapHeight = inputMap.size();
-	size_t inputMapWidth = inputMap[0].size();
-
-	size_t fmapi = 0, fmapj = 0;
-
-	size_t subMapHeight = 2, subMapWidth = 2;
-
-    // set up the outputFeatureMap size;
-    if ((inputMapHeight - (subMapHeight - 1)) >= 1 || (inputMapWidth - (subMapWidth - 1)) >= 1){
-    outputFeatureMap.resize(inputMapHeight - (subMapHeight- 1));
-    for (int i = 0; i < outputFeatureMap.size(); i++) {
-        outputFeatureMap[i].resize(inputMapWidth - (subMapWidth - 1));
-    }
-    }
-    else
-    {
-        outputFeatureMap.resize(1);
-        outputFeatureMap[0].resize(1);
-    }
-        // if map dimensions are not even then add zero vectors;
-    if (inputMapWidth % 2 != 0) {
-        inputMapWidth++;
-        
-        for (int i = 0; i < inputMapHeight; ++i) {
-            inputMap[i].push_back(0.0);
-        }
-    }
-    if (inputMapHeight % 2 != 0) {
-        inputMapHeight++;
-        std::vector<double> zero(inputMapWidth);
-        inputMap.push_back(zero);
-    }
-	for(size_t i = 0; i < inputMapHeight-1; i += 2, fmapi++) {
-		for(size_t j = 0; j < inputMapWidth-1; j += 2, fmapj++) {
-			double summ;
-			summ = inputMap[i][j] + inputMap[i + 1][j] + inputMap[i][j + 1] + inputMap[i + 1][j + 1];
-			summ *= subsampleCoeff;
-			summ += neuronBias;
-
-			summ = tFunc(summ);
-			outputFeatureMap[fmapi][fmapj] = summ;
-		}
-        fmapj = 0;
-	}
-   
-}
-
-double ConvNeuron::summate(const std::vector <std::vector<double>> &inputMap, int ipos, int jpos) {
-    double summ = 0;
-    int k=ipos, m=jpos;
-    for (int i = 0; i < coreHeight; i++, k++){
-        for (int j = 0; j < coreWidth; j++, m++){
-            summ = summ + inputMap[k][m] * convCore[i][j];
-
-        }
-        m = jpos;
-
-    }
-
-    return summ;
-}
-
-double ConvNeuron::tFunc(double x) {
-    double a = 0.1;//= value?
-    double Func = 1 / (1 + exp(-1 * x*a));
-
-    return Func;
-}
-
-void ConvNeuron::randomizeCores() {
-    srand(time(NULL));
-    for (int i = 0; i < coreHeight; i++) {
-        for (int j = 0; j < coreWidth; j++) {
-            convCore[i][j] = (double)rand() / (double)(RAND_MAX)* 1.0 - 0.5;
-        }
-    }
-    
-}
-
-void ConvNeuron::unloadFeatureMap() {
-	for(size_t i = 0; i < outputFeatureMap.size(); ++i) {
-		outputFeatureMap.clear();
-	}
-}
-
-void ConvNeuron::changeBias(double newNeuronBias) {
-	neuronBias = newNeuronBias;
-}
-
-void ConvNeuron::changeSubsCoeff(double newSubsCoeff) {
-	subsampleCoeff = newSubsCoeff;
+void ConvNeuron::GetOutput(MATRIX &tmp) {
+	tmp = OutputMap;
 }
