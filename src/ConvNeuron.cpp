@@ -51,15 +51,15 @@ void ConvNeuron::RandomizeCores() {
 }
 
 void ConvNeuron::WriteCoreToFile(ConfigManager &cfg, std::string sectionName, std::string configFiledName) {
-	std::ofstream FILE;
+	std::ofstream coreFile;
 	std::string filename;
 	cfg.getVal(sectionName, sectionName, filename);
-	FILE.open(filename);
+	coreFile.open(filename);
 	for (int i = 0; i < convMatrixHeight; ++i) {
 		for (int j = 0; j < convMatrixWidth; ++j) {
-			FILE << ConvCore[i][j] << ' ';
+			coreFile << ConvCore[i][j] << ' ';
 		}
-		FILE << std::endl;
+		coreFile << std::endl;
 	}
 }
 
