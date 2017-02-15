@@ -2,6 +2,9 @@
 
 #include <vector>
 
-std::vector<std::vector<double>> MistakeWeights(double SpeedTrain, std::vector<double> Mistake, std::vector<double> BeforeOutput);
-std::vector<double> MistakeBias(double SpeedTrain, std::vector<double> Mistake);
-std::vector<double> SumMistake(std::vector<std::vector<double>> Weights, std::vector<double> Mistake);
+namespace MLP
+{
+	std::vector<std::vector<double>> MistakeWeights(const double &SpeedTrain, const std::vector<double> &Mistake, const std::vector<double> &BeforeOutput);
+	std::vector<double> MistakeBias(const double &SpeedTrain, const std::vector<double> &Mistake);
+	std::vector<double> SumMistake(const std::vector<std::vector<double>> &Weights, const std::vector<double> &Mistake);
+}

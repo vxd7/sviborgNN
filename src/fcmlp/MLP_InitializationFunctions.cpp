@@ -1,19 +1,20 @@
-#include <ctime>
+#include <random>
 #include <fstream>
 #include <sstream>
 #include "MLP_InitializationFunctions.h"
-std::vector<double> StringToVector(char buff[]);
-std::vector<double> InitializationBias(int size)
+
+std::vector<double> MLP::InitializationBias(const int &size)
 {
-	srand(time(NULL));
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_real_distribution<> urd(-0.5, 0.5);
 	std::vector<double> bias(size);
 	for (int i = 0; i < size; i++)
 	{
-		bias[i] = (1 + rand() % 20000 - 10000) / 20000.0;
+		bias[i] = urd(gen);
 	}
 	return bias;
 }
-void WritingBias(std::vector<double> bias, std::string filename)
+void MLP::WritingBias(const std::vector<double> &bias, const std::string &filename)
 {
 	std::ofstream fout(filename);
 	fout << bias[0];
@@ -23,7 +24,7 @@ void WritingBias(std::vector<double> bias, std::string filename)
 	}
 	fout.close();
 }
-std::vector<double> ReadingBias(std::string filename)
+std::vector<double> MLP::ReadingBias(const std::string &filename)
 {
 	std::ifstream file(filename);
 	char buff[1024];
@@ -36,9 +37,10 @@ std::vector<double> ReadingBias(std::string filename)
 	file.close();
 	return data;
 }
-std::vector<std::vector<double>> InitializationWeights(int ncols, int nrows)
+std::vector<std::vector<double>> MLP::InitializationWeights(const int &ncols, const int &nrows)
 {
-	srand(time(NULL));
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_real_distribution<> urd(-0.5, 0.5);
 	std::vector<std::vector<double>> weights(nrows);
 	for (int row = 0; row < nrows; ++row)
 	{
@@ -48,12 +50,12 @@ std::vector<std::vector<double>> InitializationWeights(int ncols, int nrows)
 	{
 		for (int j = 0; j < ncols; ++j)
 		{
-			weights[i][j] = (1 + rand() % 20000 - 10000) / 20000.0;
+			weights[i][j] = urd(gen);
 		}
 	}
 	return weights;
 }
-void WritingWeights(std::vector<std::vector<double>> weights, std::string filename)
+void MLP::WritingWeights(const std::vector<std::vector<double>> &weights, const std::string &filename)
 {
 	std::ofstream fout(filename);
 	fout << weights[0][0];
@@ -71,7 +73,7 @@ void WritingWeights(std::vector<std::vector<double>> weights, std::string filena
 		}
 	}
 }
-std::vector<std::vector<double>> ReadingWeights(std::string filename)
+std::vector<std::vector<double>> MLP::ReadingWeights(const std::string &filename)
 {
 	std::ifstream file(filename);
 	char buff[1024];
@@ -83,7 +85,7 @@ std::vector<std::vector<double>> ReadingWeights(std::string filename)
 	}
 	return data;
 }
-std::vector<double> StringToVector(char buff[])
+std::vector<double> MLP::StringToVector(char buff[])
 {
 	std::vector<double> data;
 	double number;

@@ -3,10 +3,15 @@
 #include <vector>
 #include <string>
 
-std::vector<double> InitializationBias(int size);
-void WritingBias(std::vector<double> bias, std::string filename);
-std::vector<double> ReadingBias(std::string filename);
+namespace MLP
+{
+	std::vector<double> StringToVector(char buff[]);
 
-std::vector<std::vector<double>> InitializationWeights(int ncols, int nrows);
-void WritingWeights(std::vector<std::vector<double>> weights, std::string filename);
-std::vector<std::vector<double>> ReadingWeights(std::string filename);
+	std::vector<double> InitializationBias(const int &size);
+	void WritingBias(const std::vector<double> &bias, const std::string &filename);
+	std::vector<double> ReadingBias(const std::string &filename);
+
+	std::vector<std::vector<double>> InitializationWeights(const int &ncols, const int &nrows);
+	void WritingWeights(const std::vector<std::vector<double>> &weights, const std::string &filename);
+	std::vector<std::vector<double>> ReadingWeights(const std::string &filename);
+}

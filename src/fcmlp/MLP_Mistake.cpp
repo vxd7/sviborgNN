@@ -1,6 +1,7 @@
 #include "MLP_Mistake.h"
 #include <iostream>
-std::vector<std::vector<double>> MistakeWeights(double SpeedTrain, std::vector<double> Mistake, std::vector<double> BeforeOutput)
+
+std::vector<std::vector<double>> MLP::MistakeWeights(const double &SpeedTrain, const std::vector<double> &Mistake, const std::vector<double> &BeforeOutput)
 {
 	std::vector<std::vector<double>> data(Mistake.size());
 	for (unsigned int i = 0; i < data.size(); i++)
@@ -16,7 +17,7 @@ std::vector<std::vector<double>> MistakeWeights(double SpeedTrain, std::vector<d
 	}
 	return data;
 }
-std::vector<double> MistakeBias(double SpeedTrain, std::vector<double> Mistake)
+std::vector<double> MLP::MistakeBias(const double &SpeedTrain, const std::vector<double> &Mistake)
 {
 	std::vector<double> data(Mistake.size());
 	for (unsigned int i = 0; i < data.size(); i++)
@@ -25,7 +26,7 @@ std::vector<double> MistakeBias(double SpeedTrain, std::vector<double> Mistake)
 	}
 	return data;
 }
-std::vector<double> SumMistake(std::vector<std::vector<double>> Weights, std::vector<double> Mistake)
+std::vector<double> MLP::SumMistake(const std::vector<std::vector<double>> &Weights, const std::vector<double> &Mistake)
 {
 	std::vector<double> data(Weights[0].size());
 	for (unsigned int i = 0; i < data.size(); i++)

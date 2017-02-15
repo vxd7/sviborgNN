@@ -1,5 +1,6 @@
 #include "MLP_VectorFunctions.h"
-std::vector<double> operator -(std::vector<double> a, std::vector<double> b)
+
+std::vector<double> MLP::operator -(const std::vector<double> &a, const std::vector<double> &b)
 {
 	std::vector<double> c(a.size());
 	for (unsigned int i = 0; i < c.size(); i++)
@@ -8,7 +9,7 @@ std::vector<double> operator -(std::vector<double> a, std::vector<double> b)
 	}
 	return c;
 }
-std::vector<double> operator +(std::vector<double> a, std::vector<double> b)
+std::vector<double> MLP::operator +(const std::vector<double> &a, const std::vector<double> &b)
 {
 	std::vector<double> c(a.size());
 	for (unsigned int i = 0; i < c.size(); i++)
@@ -17,7 +18,7 @@ std::vector<double> operator +(std::vector<double> a, std::vector<double> b)
 	}
 	return c;
 }
-std::vector<double> operator *(std::vector<double> a, std::vector<double> b)
+std::vector<double> MLP::operator *(const std::vector<double> &a, const std::vector<double> &b)
 {
 	std::vector<double> c(a.size());
 	for (unsigned int i = 0; i < c.size(); i++)
@@ -26,7 +27,7 @@ std::vector<double> operator *(std::vector<double> a, std::vector<double> b)
 	}
 	return c;
 }
-std::vector<std::vector<double>> operator +(std::vector<std::vector<double>> a, std::vector<std::vector<double>> b)
+std::vector<std::vector<double>> MLP::operator +(const std::vector<std::vector<double>> &a, const std::vector<std::vector<double>> &b)
 {
 	std::vector<std::vector<double>> c(a.size());
 	for (unsigned int i = 0; i < c.size(); i++)
@@ -42,7 +43,7 @@ std::vector<std::vector<double>> operator +(std::vector<std::vector<double>> a, 
 	}
 	return c;
 }
-double Total(std::vector<double> a)
+double MLP::Total(const std::vector<double> &a)
 {
 	double sum = 0;
 	for (unsigned int i = 0; i < a.size(); i++)
