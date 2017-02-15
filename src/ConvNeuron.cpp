@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include <ctime>
-#include <math.h>
+#include <random>
+#include <ñmath>
 #include <iostream>
 
 
@@ -40,11 +40,12 @@ ConvNeuron::ConvNeuron(int dimHeigth, int dimWidth) {
 
 
 void ConvNeuron::RandomizeCores() {
-	srand(time(NULL));
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_real_distribution<> urd(-0.1, 1.175);
 	ConvCore.resize(convMatrixHeight);
 	for (int i = 0; i < convMatrixHeight; ++i) {
 		for (int j = 0; j < convMatrixWidth; ++j) {
-			double a = ((double)rand()/ (double)(RAND_MAX)*4.8 - 2.4)/(convMatrixHeight*convMatrixWidth); // following Le Cun instructions
+			double a = urd(gen); // following Le Cun instructions
 			ConvCore[i].push_back(a);
 		}
 	}
