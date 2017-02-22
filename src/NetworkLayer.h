@@ -1,6 +1,9 @@
 #pragma once
 #include "ConvNeuron.h"
 #include "SubsampleNeuron.h"
+#include "ConfigManager.h"
+
+#include <string>
 
 class NetworkLayer {
 private:
@@ -44,8 +47,11 @@ class ConvolutionalLayer : public NetworkLayer {
 private:
 	// All data here
 	std::vector<ConvNeuron> layerNeurons;
+	MATRIX adjMatrix;
 
 public:
+	ConvolutionalLayer(ConfigManager &cfg, std::string sectionName);
+
 	void ProcessSingleInput(const MATRIX& inputMap);
 	void ProcessMultipleInput(const TRIPLET& inputMapList);
 	
@@ -84,6 +90,7 @@ public:
 	 */
 	void UpdateAllCoresFromFiles(std::string fileNamePrefix);
 	
+	void ReadAdjMatrix(std::string filename);
 };
 
 class SubsampleLayer : public NetworkLayer {
@@ -95,5 +102,4 @@ public:
 	void ProcessSingleInput(const MATRIX& inputMap);
 	void ProcessMultipleInput(const TRIPLET& inputMapList);
 
-	void ReadAdjMatrix(std::string filename);
 };
