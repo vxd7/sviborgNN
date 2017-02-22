@@ -24,3 +24,19 @@ void SubsampleLayer::checkConfigValidity(const ConfigManager &cfg, const std::st
 	}
 
 }
+
+SubsampleLayer::SubsampleLayer(ConfigManager &cfg, std::string sectionName) {
+	checkConfigValidity(cfg, sectionName);
+
+	cfg.getVal(sectionName, "numberOfNeurons", numberOfNeurons);
+
+	/* Resize neurons array */
+	SubsampleNeuron tmpNeuron(cfg, sectionName);
+	layerNeurons.resize(numberOfNeurons, tmpNeuron);
+
+
+	if(cfg.isTokenPresent(sectionName, "outputMapDir")) {
+		cfg.getVal(sectionName, "outputMapDir", outputMapDir);
+	}
+	
+}
