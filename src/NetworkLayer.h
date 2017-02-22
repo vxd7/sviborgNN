@@ -96,9 +96,19 @@ public:
 class SubsampleLayer : public NetworkLayer {
 private:
 	std::vector<SubsampleNeuron> layerNeurons;
-	//Data here
-	MATRIX adjMatrix;
+
+	std::vector<std::string> criticalConfigEntries = {
+		"subsampleCoeff",
+		"neuronBias",
+		"exponentThresholdFunction"
+	};
+
+	std::string outputMapDir;
+
+	void checkConfigValidity(const ConfigManager &cfg, const std::string& sectionName);
 public:
+	SubsampleLayer(ConfigManager &cfg, std::string sectionName);
+
 	void ProcessSingleInput(const MATRIX& inputMap);
 	void ProcessMultipleInput(const TRIPLET& inputMapList);
 
