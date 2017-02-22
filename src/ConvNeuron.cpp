@@ -13,12 +13,11 @@ ConvNeuron::ConvNeuron(ConfigManager &cfg, std::string sectionName, std::string 
 	//read dimensions;
 	cfg.getVal(sectionName, "convMatrixHeight", convMatrixHeight);
 	cfg.getVal(sectionName, "convMatrixWidth", convMatrixWidth);
-	//get filename with values;
-	cfg.getVal(sectionName,configFiledName,filename);
-	std::ifstream VALS;
-	VALS.open(filename, std::ios::in);
 	ConvCore.resize(convMatrixHeight);
-	if (isRand) {
+	if (!isRand) {
+		cfg.getVal(sectionName, configFiledName, filename);
+		std::ifstream VALS;
+		VALS.open(filename, std::ios::in);
 		for (int i = 0; i < convMatrixHeight; ++i) {
 			double num;
 			for (int j = 0; j < convMatrixWidth; ++j) {
@@ -26,10 +25,13 @@ ConvNeuron::ConvNeuron(ConfigManager &cfg, std::string sectionName, std::string 
 				ConvCore[i].push_back(num);
 			}
 		}
+		VALS.close();
 	}
-	else
+	else {
 		RandomizeCores();
-	VALS.close();
+		//writing random cores to file;
+		WriteCoreToFile(cfg, sectionName, configFiledName);
+	}
 }
 
 ConvNeuron::ConvNeuron(int dimHeigth, int dimWidth) {

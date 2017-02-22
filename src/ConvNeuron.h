@@ -22,8 +22,9 @@ public:
 
 	void ResizeOutput(int InputMapHeight, int InputMapWidth);
 
-private:
 	MATRIX ConvCore;
+
+private:
 	MATRIX OutputMap;
 	int convMatrixHeight, convMatrixWidth;
 	double bias = 1.0;

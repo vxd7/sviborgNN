@@ -47,7 +47,7 @@ class ConvolutionalLayer : public NetworkLayer {
 private:
 	// All data here
 	std::vector<ConvNeuron> layerNeurons;
-	MATRIX adjMatrix;
+	`
 
 public:
 	ConvolutionalLayer(ConfigManager &cfg, std::string sectionName);
