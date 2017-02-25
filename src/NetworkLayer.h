@@ -43,14 +43,15 @@ public:
 
 };
 
-class ConvolutionalLayer : public NetworkLayer {
+class ConvolutionLayer : public NetworkLayer {
 private:
 	// All data here
-	std::vector<ConvNeuron> layerNeurons;
-	`
+	std::vector<ConvNeuron> neurons;
+	int numberOfNeurons;
+	MATRIX adjMatrix;
 
 public:
-	ConvolutionalLayer(ConfigManager &cfg, std::string sectionName);
+	ConvolutionLayer(ConfigManager &cfg, std::string sectionName);
 
 	void ProcessSingleInput(const MATRIX& inputMap);
 	void ProcessMultipleInput(const TRIPLET& inputMapList);
@@ -77,7 +78,7 @@ public:
 	 * Read single convolutional core of the neuronNumber'th neuron.
 	 * Takes a 2-dim. vector as the destination
 	 */
-	void ReadSingleCore(std::string fileNamePrefix, const int neuronNumber, MATRIX& resCore);
+	void ReadSingleCore(std::string fileNamePrefix, std::string sectionName, const int neuronNumber, MATRIX& resCore);
 
 	/**
 	 * Update the convolutional core of the single neuron
