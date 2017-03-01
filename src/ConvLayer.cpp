@@ -15,7 +15,8 @@ ConvolutionLayer::ConvolutionLayer(ConfigManager &cfg, std::string sectionName) 
 
 		throw std::invalid_argument(errorMsg);
 	}
-
+	
+	neurons.resize(numberOfNeurons);
 	cfg.getVal(sectionName, "AdjMatrix", filename_1);
 	ReadAdjMatrix(filename_1);
 	// read cores;
@@ -31,13 +32,9 @@ ConvolutionLayer::ConvolutionLayer(ConfigManager &cfg, std::string sectionName) 
 
 }
 
-void ConvolutionLayer::ProcessSingleInput(const MATRIX &InputMap) {
-	for (int i = 0; i < numberOfNeurons; ++i) {
-		neurons[i].Convolute(InputMap);
-	}
-}
 
-void ConvolutionLayer::ProcessMultipleInput(const TRIPLET &InputMaps) {
+
+void ConvolutionLayer::ProcessOutput(const TRIPLET &InputMaps) {
 
 
 	/**
@@ -80,7 +77,6 @@ void ConvolutionLayer::ReadAdjMatrix(std::string filename) {
 	}
 }
 
-// I cannot understandd how to work with configmanager;
 
 void ConvolutionLayer::ReadSingleCore(ConfigManager &cfg, std::string sectionName, int neuronNumber, MATRIX &resCore) {
 	std::ifstream neuronCoreFile;
@@ -89,10 +85,8 @@ void ConvolutionLayer::ReadSingleCore(ConfigManager &cfg, std::string sectionNam
 	cfg.getVal(sectionName, "convMatrixHeight", neuronCoreHeight);
 	cfg.getVal(sectionName, "convMatrixWidth", neuronCoreWidth);
 
-	fileNamePrefix += "_neuron";
-	std::string fileName = fileNamePrefix + std::to_string(neuronNumber);
-	std::string fileName_1 = " ";
-	cfg.getVal(sectionName, fileName, fileName_1);
+	std::string fileName_1 = sectionName + "_neuron" + std::to_string(neuronNumber);
+	cfg.getVal(cfg, sectionName, fileName_1);
 	neuronCoreFile.open(fileName_1, std::ios::in);
 
 	if (resCore.size() != neuronCoreHeight) {
@@ -114,43 +108,47 @@ void ConvolutionLayer::ReadSingleCore(ConfigManager &cfg, std::string sectionNam
 	neuronCoreFile.close();
 }
 
-void ConvolutionLayer::updateNeuronCore(const MATRIX &updMap, const int neuronNumber) {
+void ConvolutionLayer::UpdateNeuronCore(const MATRIX& updMap, const int neuronNumber) {
 	int neuronCoreHeight, neuronCoreWidth;
 	int oldCoreHeight, oldCoreWidth;
 
 	neuronCoreHeight = updMap.size();
 	neuronCoreWidth = updMap[0].size();
 
-	oldCoreHeight = neurons[neuronNumber].coreHeight;
-	oldCoreWidth = neurons[neuronNumber].coreWidth;
+	oldCoreHeight = neurons[neuronNumber].convMatrixHeight;
+	oldCoreWidth = neurons[neuronNumber].convMatrixWidth;
 
 	if ((oldCoreHeight != neuronCoreHeight) || (oldCoreWidth != neuronCoreWidth)) {
 		std::string errorMsg("Incorrect convolutional core dimensions! Function ConvolutionLayer::updateNeuronCore(...)");
 		throw std::invalid_argument(errorMsg);
 	}
-
+	
+	neurons[neuronNumber].ConvCore.resize(neuronCoreHeight);
 	for (size_t i = 0; i < neuronCoreHeight; ++i) {
+		neurons[neuronNumber].ConvCore[i].resize(neuronCoreWidth);
 		for (size_t j = 0; j < neuronCoreWidth; ++j) {
-			neurons[neuronNumber].convCore[i][j] = updMap[i][j];
+			neurons[neuronNumber].ConvCore[i][j] = updMap[i][j];
 		}
 	}
 }
 
-void ConvolutionLayer::updateAllCoresFromFiles(std::string fileNamePrefix) {
+void ConvolutionLayer::UpdateAllCoresFromFiles(ConfigManager &cfg, std::string sectionName) {
 
 	for (size_t i = 0; i < numberOfNeurons; ++i) {
 		MATRIX readCore;
 
-		readSingleCore(fileNamePrefix, i, readCore);
+		readSingleCore(cfg, sectionName, i, readCore);
 
 		updateNeuronCore(readCore, i);
 	}
 }
 
-void ConvolutionLayer::WriteSingleCore(std::string fileNamePrefix, int neuronNumber) {
-
+void ConvolutionLayer::WriteSingleCore(ConfigManager &cfg, std::string sectionName, int neuronNumber) {
+	neurons[neuronNumber].WriteCoreToFile(cfg, sectionName, sectionName + "_neuron" + std::to_string(neuronNumber));
 }
 
-void ConvolutionLayer::WriteCoresToFiles(std::string fileNamePrefix) {
-	for (size_t i = 0; i< )
+void ConvolutionLayer::WriteCoresToFiles(ConfigManager &cfg, std::string sectionName) {
+	for (size_t i = 0; i < neurons.size(); ++i) {
+		neurons[i].WriteCoreToFile(cfg, sectionName, sectionName + "_neuron" + std::to_string(i));
+	}
 }
