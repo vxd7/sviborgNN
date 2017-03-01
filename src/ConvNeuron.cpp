@@ -13,12 +13,11 @@ ConvNeuron::ConvNeuron(ConfigManager &cfg, std::string sectionName, std::string 
 	//read dimensions;
 	cfg.getVal(sectionName, "convMatrixHeight", convMatrixHeight);
 	cfg.getVal(sectionName, "convMatrixWidth", convMatrixWidth);
-	//get filename with values;
-	cfg.getVal(sectionName,configFiledName,filename);
-	std::ifstream VALS;
-	VALS.open(filename, std::ios::in);
 	ConvCore.resize(convMatrixHeight);
-	if (isRand) {
+	if (!isRand) {
+		cfg.getVal(sectionName, configFiledName, filename);
+		std::ifstream VALS;
+		VALS.open(filename, std::ios::in);
 		for (int i = 0; i < convMatrixHeight; ++i) {
 			double num;
 			for (int j = 0; j < convMatrixWidth; ++j) {
@@ -26,10 +25,13 @@ ConvNeuron::ConvNeuron(ConfigManager &cfg, std::string sectionName, std::string 
 				ConvCore[i].push_back(num);
 			}
 		}
+		VALS.close();
 	}
-	else
+	else {
 		RandomizeCores();
-	VALS.close();
+		//writing random cores to file;
+		WriteCoreToFile(configFiledName);
+	}
 }
 
 ConvNeuron::ConvNeuron(int dimHeigth, int dimWidth) {
@@ -51,10 +53,10 @@ void ConvNeuron::RandomizeCores() {
 	}
 }
 
-void ConvNeuron::WriteCoreToFile(ConfigManager &cfg, std::string sectionName, std::string configFiledName) {
+void ConvNeuron::WriteCoreToFile(std::string configFiledName) {
 	std::ofstream coreFile;
-	std::string filename;
-	cfg.getVal(sectionName, sectionName, filename);
+	std::string filename = configFiledName;
+	//cfg.getVal(sectionName, sectionName, filename);
 	coreFile.open(filename);
 	for (int i = 0; i < convMatrixHeight; ++i) {
 		for (int j = 0; j < convMatrixWidth; ++j) {
@@ -102,6 +104,13 @@ double ConvNeuron::tFunc(double x) {
 void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps) {
 
 	double sectorSumm = 0;
+
+	if (!inputMaps.size()) {
+		std::string errorMsg("Incorrect neuron Input! Function ConvNeuron::ProcessMaps(...)");
+
+		throw std::invalid_argument(errorMsg);
+
+	}
 
 	int inputMapHeight = inputMaps[0].size();
 	int inputMapWidth = inputMaps[0][0].size();

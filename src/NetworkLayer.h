@@ -9,8 +9,7 @@ class NetworkLayer {
 private:
 
 public:
-	virtual void ProcessSingleInput(const MATRIX& inputMap, const int neuronIndex) = 0;
-	virtual void ProcessMultipleInput(const TRIPLET& inputMapList) = 0;
+	virtual void ProcessOutput(const TRIPLET& inputMapList) = 0;
 
 	 // ************************************** // 
 	 // * Feature map manipulation functions * //
@@ -43,17 +42,24 @@ public:
 
 };
 
-class ConvolutionalLayer : public NetworkLayer {
+class ConvolutionLayer : public NetworkLayer {
 private:
 	// All data here
-	std::vector<ConvNeuron> layerNeurons;
+	std::vector<ConvNeuron> neurons;
+	int numberOfNeurons;
 	MATRIX adjMatrix;
 
 public:
-	ConvolutionalLayer(ConfigManager &cfg, std::string sectionName);
+	ConvolutionLayer(ConfigManager &cfg, std::string sectionName);
 
-	void ProcessSingleInput(const MATRIX& inputMap, const int neuronIndex);
-	void ProcessMultipleInput(const TRIPLET& inputMapList);
+	/*Function ProcessOutput(const TRIPLET& inputMapList):
+	* Creates an output of Convolutional layer. Each input map
+	* is connected to certain neuron and it's connection is determined 
+	* by adjacency matrix.
+	*
+	*/
+
+	void ProcessOutput(const TRIPLET& inputMapList);
 	
 	// ********************************************** //
 	// * Convolutional cores manipulation functions * //
@@ -64,20 +70,18 @@ public:
 	 * File name is constructed like this:
 	 * layer<NUM>_neuron<NUM>.fMap
 	 */
-	void WriteSingleCore(std::string fileNamePrefix, int neuronNumber);
+	void WriteSingleCore(ConfigManager &cfg, std::string sectionName, int neuronNumber);
 
 	/**
 	 * Write all the convolutional core of all the neurons to the files.
-	 * File names are constructed like this
-	 * layer<NUM>_neuron<NUM>.cnvCore
 	 */
-	void WriteCoresToFiles(std::string fileNamePrefix);
+	void WriteCoresToFiles(ConfigManager &cfg, std::string sectionName);
 
 	/**
 	 * Read single convolutional core of the neuronNumber'th neuron.
 	 * Takes a 2-dim. vector as the destination
 	 */
-	void ReadSingleCore(std::string fileNamePrefix, const int neuronNumber, MATRIX& resCore);
+	void ReadSingleCore(ConfigManager &cfg, std::string sectionName, int neuronNumber, MATRIX &resCore);
 
 	/**
 	 * Update the convolutional core of the single neuron
@@ -85,12 +89,14 @@ public:
 	void UpdateNeuronCore(const MATRIX& updMap, const int neuronNumber);
 
 	/**
-	 * Update all the convolutional cores of all the neurons from the files with
-	 * fileNamePrefix prefix
+	 * Update all the convolutional cores of all the neurons from the files described
+	 * in certain section
 	 */
-	void UpdateAllCoresFromFiles(std::string fileNamePrefix);
+	void UpdateAllCoresFromFiles(ConfigManager &cfg, std::string sectionName);
 	
 	void ReadAdjMatrix(std::string filename);
+
+	void GetOutput(TRIPLET &Output);
 };
 
 class SubsampleLayer : public NetworkLayer {

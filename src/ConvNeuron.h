@@ -22,16 +22,18 @@ public:
 
 	void ResizeOutput(int InputMapHeight, int InputMapWidth);
 
-private:
+	void WriteCoreToFile(std::string configFiledName);
+
 	MATRIX ConvCore;
-	MATRIX OutputMap;
+
 	int convMatrixHeight, convMatrixWidth;
+private:
+	MATRIX OutputMap;
+	
 	double bias = 1.0;
 
 	void RandomizeCores();
 
-	void WriteCoreToFile(ConfigManager &cfg, std::string sectionName, std::string configFiledName);
-	
 	double summate(const MATRIX &InputMap, int ipos, int jpos);
 	
 	double tFunc(double x);
