@@ -29,7 +29,7 @@ ConvolutionLayer::ConvolutionLayer(ConfigManager &cfg, std::string sectionName) 
 
 }
 
-void ConvolutionLayer::ProcessOutput(const TRIPLET &InputMaps) {
+void ConvolutionLayer::ProcessLayerInput(const TRIPLET &InputMaps) {
 
 
 	/**

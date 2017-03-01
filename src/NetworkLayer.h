@@ -9,7 +9,7 @@ class NetworkLayer {
 private:
 
 public:
-	virtual void ProcessOutput(const TRIPLET& inputMapList) = 0;
+	virtual void ProcessLayerInput(const TRIPLET& inputMapList) = 0;
 
 	 // ************************************** // 
 	 // * Feature map manipulation functions * //
@@ -52,14 +52,14 @@ private:
 public:
 	ConvolutionLayer(ConfigManager &cfg, std::string sectionName);
 
-	/*Function ProcessOutput(const TRIPLET& inputMapList):
+	/*Function ProcessLayerInput(const TRIPLET& inputMapList):
 	* Creates an output of Convolutional layer. Each input map
 	* is connected to certain neuron and it's connection is determined 
 	* by adjacency matrix.
 	*
 	*/
 
-	void ProcessOutput(const TRIPLET& inputMapList);
+	void ProcessLayerInput(const TRIPLET& inputMapList);
 	
 	// ********************************************** //
 	// * Convolutional cores manipulation functions * //
@@ -117,7 +117,6 @@ private:
 public:
 	SubsampleLayer(ConfigManager &cfg, const std::string& sectionName);
 
-	void ProcessSingleInput(const MATRIX& inputMap, const int neuronIndex);
-	void ProcessMultipleInput(const TRIPLET& inputMapList);
+	void ProcessLayerInput(const TRIPLET& inputMapList);
 
 };
