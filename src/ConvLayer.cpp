@@ -1,4 +1,5 @@
 #include "NetworkLayer.h"
+#include "ConfigManager.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -6,7 +7,7 @@
 
 ConvolutionLayer::ConvolutionLayer(ConfigManager &cfg, std::string sectionName) {
 	std::string filename_1;
-	bool isRand;
+	int isRand;
 
 	cfg.getVal(sectionName, "numberofNeurons", numberOfNeurons);
 	cfg.getVal(sectionName, "Random", isRand);
@@ -16,23 +17,17 @@ ConvolutionLayer::ConvolutionLayer(ConfigManager &cfg, std::string sectionName) 
 		throw std::invalid_argument(errorMsg);
 	}
 	
-	neurons.resize(numberOfNeurons);
 	cfg.getVal(sectionName, "AdjMatrix", filename_1);
 	ReadAdjMatrix(filename_1);
 	// read cores;
 	for (int i = 0; i < numberOfNeurons; ++i) {
 		std::string filename_2 = "";
-		filename_2 = sectionName + "_neuron" + std::to_string(i);
-		if (!isRand) {
-			ConvNeuron::ConvNeuron(cfg, sectionName, filename_2);
-		}
-		else
-			ConvNeuron::ConvNeuron(cfg, sectionName, filename_2, isRand);
+		filename_2 = sectionName + "_neuron" + std::to_string(i+1) + ".txt";
+		ConvNeuron neuron(cfg, sectionName, filename_2, isRand);
+		neurons.push_back(neuron);
 	}
 
 }
-
-
 
 void ConvolutionLayer::ProcessOutput(const TRIPLET &InputMaps) {
 
@@ -69,7 +64,6 @@ void ConvolutionLayer::ReadAdjMatrix(std::string filename) {
 	adjMatrixFile >> length >> width;
 	adjMatrix.resize(length);
 	for (size_t i = 0; i < length; ++i) {
-		adjMatrix[i].resize(width);
 		for (size_t j = 0; j < width; ++j) {
 			adjMatrixFile >> value;
 			adjMatrix[i].push_back(value);
@@ -77,6 +71,12 @@ void ConvolutionLayer::ReadAdjMatrix(std::string filename) {
 	}
 }
 
+void ConvolutionLayer::GetOutput(TRIPLET &Output) {
+	for (int i = 0; i < numberOfNeurons; ++i) {
+		Output.resize(i + 1);
+		neurons[i].GetOutput(Output[i]);
+	}
+}
 
 void ConvolutionLayer::ReadSingleCore(ConfigManager &cfg, std::string sectionName, int neuronNumber, MATRIX &resCore) {
 	std::ifstream neuronCoreFile;
@@ -86,8 +86,9 @@ void ConvolutionLayer::ReadSingleCore(ConfigManager &cfg, std::string sectionNam
 	cfg.getVal(sectionName, "convMatrixWidth", neuronCoreWidth);
 
 	std::string fileName_1 = sectionName + "_neuron" + std::to_string(neuronNumber);
-	cfg.getVal(cfg, sectionName, fileName_1);
-	neuronCoreFile.open(fileName_1, std::ios::in);
+	std::string fileName_2;
+	cfg.getVal(sectionName, fileName_1, fileName_2);
+	neuronCoreFile.open(fileName_2, std::ios::in);
 
 	if (resCore.size() != neuronCoreHeight) {
 		resCore.resize(neuronCoreHeight);
@@ -137,18 +138,18 @@ void ConvolutionLayer::UpdateAllCoresFromFiles(ConfigManager &cfg, std::string s
 	for (size_t i = 0; i < numberOfNeurons; ++i) {
 		MATRIX readCore;
 
-		readSingleCore(cfg, sectionName, i, readCore);
+		ReadSingleCore(cfg, sectionName, i, readCore);
 
-		updateNeuronCore(readCore, i);
+		UpdateNeuronCore(readCore, i);
 	}
 }
 
 void ConvolutionLayer::WriteSingleCore(ConfigManager &cfg, std::string sectionName, int neuronNumber) {
-	neurons[neuronNumber].WriteCoreToFile(cfg, sectionName, sectionName + "_neuron" + std::to_string(neuronNumber));
+	neurons[neuronNumber].WriteCoreToFile(sectionName + "_neuron" + std::to_string(neuronNumber));
 }
 
 void ConvolutionLayer::WriteCoresToFiles(ConfigManager &cfg, std::string sectionName) {
 	for (size_t i = 0; i < neurons.size(); ++i) {
-		neurons[i].WriteCoreToFile(cfg, sectionName, sectionName + "_neuron" + std::to_string(i));
+		neurons[i].WriteCoreToFile(sectionName + "_neuron" + std::to_string(i));
 	}
 }

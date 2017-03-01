@@ -9,8 +9,7 @@ class NetworkLayer {
 private:
 
 public:
-	virtual void ProcessSingleInput(const MATRIX& inputMap) = 0;
-	virtual void ProcessMultipleInput(const TRIPLET& inputMapList) = 0;
+	virtual void ProcessOutput(const TRIPLET& inputMapList) = 0;
 
 	 // ************************************** // 
 	 // * Feature map manipulation functions * //
@@ -96,6 +95,8 @@ public:
 	void UpdateAllCoresFromFiles(ConfigManager &cfg, std::string sectionName);
 	
 	void ReadAdjMatrix(std::string filename);
+
+	void GetOutput(TRIPLET &Output);
 };
 
 class SubsampleLayer : public NetworkLayer {

@@ -30,7 +30,7 @@ ConvNeuron::ConvNeuron(ConfigManager &cfg, std::string sectionName, std::string 
 	else {
 		RandomizeCores();
 		//writing random cores to file;
-		WriteCoreToFile(cfg, sectionName, configFiledName);
+		WriteCoreToFile(configFiledName);
 	}
 }
 
@@ -53,10 +53,10 @@ void ConvNeuron::RandomizeCores() {
 	}
 }
 
-void ConvNeuron::WriteCoreToFile(ConfigManager &cfg, std::string sectionName, std::string configFiledName) {
+void ConvNeuron::WriteCoreToFile(std::string configFiledName) {
 	std::ofstream coreFile;
-	std::string filename;
-	cfg.getVal(sectionName, sectionName, filename);
+	std::string filename = configFiledName;
+	//cfg.getVal(sectionName, sectionName, filename);
 	coreFile.open(filename);
 	for (int i = 0; i < convMatrixHeight; ++i) {
 		for (int j = 0; j < convMatrixWidth; ++j) {
@@ -104,6 +104,13 @@ double ConvNeuron::tFunc(double x) {
 void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps) {
 
 	double sectorSumm = 0;
+
+	if (!inputMaps.size()) {
+		std::string errorMsg("Incorrect neuron Input! Function ConvNeuron::ProcessMaps(...)");
+
+		throw std::invalid_argument(errorMsg);
+
+	}
 
 	int inputMapHeight = inputMaps[0].size();
 	int inputMapWidth = inputMaps[0][0].size();

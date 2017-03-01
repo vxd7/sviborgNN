@@ -22,7 +22,7 @@ public:
 
 	void ResizeOutput(int InputMapHeight, int InputMapWidth);
 
-	void WriteCoreToFile(ConfigManager &cfg, std::string sectionName, std::string configFiledName);
+	void WriteCoreToFile(std::string configFiledName);
 
 	MATRIX ConvCore;
 
