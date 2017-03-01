@@ -18,7 +18,7 @@ struct InvalidResultArrayDimension : public std::exception {
 public:
 	explicit InvalidResultArrayDimension(const std::string& message) : message_(message) {}
 	explicit InvalidResultArrayDimension() : message_("Invalid result array dimensions") {};
-}InvalidResultArrayDimensionException;
+};
 
 struct MissingConfiguration : public std::exception {
 	std::string message_;
@@ -27,13 +27,13 @@ struct MissingConfiguration : public std::exception {
 	}
 
 public:
-	explicit MissingConfiguration(std::vector<std::string> missing) {
+	explicit MissingConfiguration(const std::vector<std::string>& missing) {
 		for(size_t i = 0; i < missing.size() - 1; ++i) {
 			message_ += missing[i] + ", ";
 		}
 
-		message_ += missing[missing.size()] + ".";
+		message_ += missing[missing.size() - 1] + ".";
 	}
 
 	explicit MissingConfiguration() : message_("Invalid configuration") {};
-}MissingConfigurationException;
+};
