@@ -9,7 +9,7 @@ class NetworkLayer {
 private:
 
 public:
-	virtual void ProcessSingleInput(const MATRIX& inputMap) = 0;
+	virtual void ProcessSingleInput(const MATRIX& inputMap, const int neuronIndex) = 0;
 	virtual void ProcessMultipleInput(const TRIPLET& inputMapList) = 0;
 
 	 // ************************************** // 
@@ -52,7 +52,7 @@ private:
 public:
 	ConvolutionalLayer(ConfigManager &cfg, std::string sectionName);
 
-	void ProcessSingleInput(const MATRIX& inputMap);
+	void ProcessSingleInput(const MATRIX& inputMap, const int neuronIndex);
 	void ProcessMultipleInput(const TRIPLET& inputMapList);
 	
 	// ********************************************** //
@@ -95,9 +95,11 @@ public:
 
 class SubsampleLayer : public NetworkLayer {
 private:
+	int numberOfNeurons;
 	std::vector<SubsampleNeuron> layerNeurons;
 
 	std::vector<std::string> criticalConfigEntries = {
+		"numberOfNeurons",
 		"subsampleCoeff",
 		"neuronBias",
 		"exponentThresholdFunction"
@@ -105,11 +107,11 @@ private:
 
 	std::string outputMapDir;
 
-	void checkConfigValidity(const ConfigManager &cfg, const std::string& sectionName);
+	void checkConfigValidity(ConfigManager &cfg, const std::string& sectionName);
 public:
-	SubsampleLayer(ConfigManager &cfg, std::string sectionName);
+	SubsampleLayer(ConfigManager &cfg, const std::string& sectionName);
 
-	void ProcessSingleInput(const MATRIX& inputMap);
+	void ProcessSingleInput(const MATRIX& inputMap, const int neuronIndex);
 	void ProcessMultipleInput(const TRIPLET& inputMapList);
 
 };
