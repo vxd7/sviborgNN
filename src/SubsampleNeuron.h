@@ -10,8 +10,8 @@ private:
 
 	/* These are standart values and cannot be overriden
 	 * See Yan LeKunn works for more info */
-	const int subsampleMapHeight = 2;
-	const int subsampleMapWidth = 2;
+	static const int subsampleMapHeight = 2;
+	static const int subsampleMapWidth = 2;
 
 
 	double subsampleCoeff;
@@ -19,7 +19,7 @@ private:
 	double exponentThresholdFunction;
 
 public:
-	SubsampleNeuron(ConfigManager& cfg, std::string sectionName);
+	SubsampleNeuron(ConfigManager& cfg, const std::string& sectionName);
 
 	void subsampleMap(std::vector<std::vector<double>>& inputMap);
 

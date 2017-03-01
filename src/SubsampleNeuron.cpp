@@ -7,7 +7,7 @@
 #include "NetworkException.h"
 
 
-SubsampleNeuron::SubsampleNeuron(ConfigManager& cfg, std::string sectionName) {
+SubsampleNeuron::SubsampleNeuron(ConfigManager& cfg, const std::string& sectionName) {
 	/* Get subsample coefficient from config file */
 	cfg.getVal(sectionName, "subsampleCoeff", subsampleCoeff);
 	cfg.getVal(sectionName, "neuronBias", neuronBias);
@@ -44,6 +44,7 @@ void SubsampleNeuron::subsampleMap(std::vector<std::vector<double>>& inputMap) {
 			outputFeatureMap[i].resize(outputMapWidth);
 		}
     } else {
+		InvalidResultArrayDimension InvalidResultArrayDimensionException;
 		throw InvalidResultArrayDimensionException;
 	}
 
