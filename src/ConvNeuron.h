@@ -3,8 +3,7 @@
 #include <vector>
 #include "ConfigManager.h"
 
-typedef std::vector<std::vector<double>> MATRIX;
-typedef std::vector<std::vector< std::vector<double>>> TRIPLET;
+#include "CustomTypes.h"
 
 class ConvNeuron {
 public:

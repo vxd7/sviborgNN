@@ -114,6 +114,7 @@ private:
 	std::string outputMapDir;
 
 	void checkConfigValidity(ConfigManager &cfg, const std::string& sectionName);
+
 public:
 	SubsampleLayer(ConfigManager &cfg, const std::string& sectionName);
 
