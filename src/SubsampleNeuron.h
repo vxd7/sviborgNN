@@ -4,6 +4,8 @@
 #include <string>
 
 #include "ConfigManager.h"
+#include "CustomTypes.h"
+
 class SubsampleNeuron {
 private:
 	std::vector<std::vector<double>> outputFeatureMap;
@@ -21,7 +23,7 @@ private:
 public:
 	SubsampleNeuron(ConfigManager& cfg, const std::string& sectionName);
 
-	void subsampleMap(std::vector<std::vector<double>>& inputMap);
+	void subsampleMap(const std::vector<std::vector<double>>& inputMap);
 
 	std::vector<std::vector<double>>& getOuputMap();
     double sigmoidTresholdFunc(const double& x);

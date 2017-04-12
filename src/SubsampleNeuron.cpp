@@ -15,23 +15,25 @@ SubsampleNeuron::SubsampleNeuron(ConfigManager& cfg, const std::string& sectionN
 	
 }
 
-void SubsampleNeuron::subsampleMap(std::vector<std::vector<double>>& inputMap) {
+void SubsampleNeuron::subsampleMap(const std::vector<std::vector<double>>& inputMap) {
 	size_t inputMapHeight = inputMap.size();
 	size_t inputMapWidth = inputMap[0].size();
+
+	MATRIX inputMapLocalCopy = inputMap;
 
 	// if map dimensions are not even then add zero vectors;
     if (inputMapWidth % 2 != 0) {
         inputMapWidth++;
         
         for (int i = 0; i < inputMapHeight; ++i) {
-            inputMap[i].push_back(0.0);
+            inputMapLocalCopy[i].push_back(0.0);
         }
     }
 
     if (inputMapHeight % 2 != 0) {
         inputMapHeight++;
         std::vector<double> zero(inputMapWidth);
-        inputMap.push_back(zero);
+        inputMapLocalCopy.push_back(zero);
     }
 
 	outputMapHeight = inputMapHeight/2;
@@ -54,7 +56,9 @@ void SubsampleNeuron::subsampleMap(std::vector<std::vector<double>>& inputMap) {
 	for(size_t i = 0; i < inputMapHeight-1; i += 2, fmapi++) {
 		for(size_t j = 0; j < inputMapWidth-1; j += 2, fmapj++) {
 			double summ;
-			summ = inputMap[i][j] + inputMap[i + 1][j] + inputMap[i][j + 1] + inputMap[i + 1][j + 1];
+			summ = inputMapLocalCopy[i][j] + inputMapLocalCopy[i + 1][j] +
+			   	inputMapLocalCopy[i][j + 1] + inputMapLocalCopy[i + 1][j + 1];
+
 			summ *= subsampleCoeff;
 			summ += neuronBias;
 
