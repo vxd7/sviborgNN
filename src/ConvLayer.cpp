@@ -72,10 +72,14 @@ void ConvolutionLayer::ReadAdjMatrix(std::string filename) {
 }
 
 void ConvolutionLayer::GetOutput(TRIPLET &Output) {
+	Output.resize(numberOfNeurons);
 	for (int i = 0; i < numberOfNeurons; ++i) {
-		Output.resize(i + 1);
 		neurons[i].GetOutput(Output[i]);
 	}
+}
+
+std::vector<std::vector<double>>& SubsampleNeuron::getOuputMap() {
+	return outputFeatureMap;
 }
 
 void ConvolutionLayer::ReadSingleCore(ConfigManager &cfg, std::string sectionName, int neuronNumber, MATRIX &resCore) {

@@ -40,6 +40,7 @@ public:
 	 */
 	void UnloadFeatureMaps();
 
+	virtual void GetOutput(TRIPLET &Output) = 0;
 };
 
 class ConvolutionLayer : public NetworkLayer {
@@ -119,5 +120,7 @@ public:
 	SubsampleLayer(ConfigManager &cfg, const std::string& sectionName);
 
 	void ProcessLayerInput(const TRIPLET& inputMapList);
+
+	void GetOutput(TRIPLET &Output);
 
 };

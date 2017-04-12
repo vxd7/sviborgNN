@@ -49,3 +49,10 @@ void SubsampleLayer::ProcessLayerInput(const TRIPLET& inputMapList) {
 		layerNeurons[i].subsampleMap(inputMapList[i]);
 	}
 }
+
+void SubsampleLayer::GetOutput(TRIPLET &Output) {
+	Output.resize(numberOfNeurons);
+	for (int i = 0; i < numberOfNeurons; ++i) {
+		Output[i] = layerNeurons[i].getOuputMap();
+	}
+}

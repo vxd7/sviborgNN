@@ -56,16 +56,13 @@ ConvNetwork::ConvNetwork() {
 	
 }
 
-void ConvNetwork::processInputMap(int inputMapNumber, std::vector <double> &outputMap) {
-	/* Image is loaded and network is built by now */
-
-
+void ConvNetwork::processInputMap(std::vector <double> &outputMap, int inputMapNumber = 0) {
 	/**
 	 * Load an input map
 	 */
-	std::vector<std::vector<double>> inputMap;
-	std::cout << "void ImageIface::computeGrayscaleMatrix(std::string filename, std::vector <std::vector <double>> &imageMatrix) " << std::endl;
+	MATRIX inputMap;
 	inputImages.computeGrayscaleMatrix(inputMapNumber, inputMap);
+	// output for debugging
 	std::cout << "Input Map" << std::endl;
 	for (int i = 0; i < inputMap.size(); ++i) {
 		for (int j = 0; j < inputMap[i].size(); ++j) {
@@ -73,68 +70,24 @@ void ConvNetwork::processInputMap(int inputMapNumber, std::vector <double> &outp
 		}
 		std::cout << std::endl;
 	}
-	/**
-	 * And start the computation!
-	 */
-	std::vector<std::vector<std::vector<double>>> layerOutput;
+	/*
+	* And start computing! :D
+	*/
+	TRIPLET layerOutput;
+	layerOutput.push_back(inputMap);
 
-	std::cout << "void ConvLayer::computeFeatureMap(std::vector<std::vector<double>> &inputMap)" << std::endl;
-	networkLayers[0].computeFeatureMap(inputMap);
-	std::cout << "void ConvLayer::getAllFeatureMaps(std::vector<std::vector<std::vector<double>>> &resultMaps)" << std::endl;
-	networkLayers[0].getAllFeatureMaps(layerOutput);
+	for (size_t i = 0; i < numLayers; ++i) {
 
-	std::cout << "CONV0" << std::endl;
-	for (size_t t = layerOutput.size() - NIL[0]; t < layerOutput.size(); ++t) {
-		for (size_t l = 0; l < layerOutput[t].size(); ++l) {
-			for (size_t m = 0; m < layerOutput[t][l].size(); ++m)
-				std::cout << layerOutput[0][l][m] << " ";
-			std::cout << std::endl;
-		}
-		std::cout << std::endl;
+		networkLayers[i].ProcessLayerInput(layerOutput);
+		networkLayers[i].GetOutput(layerOutput);
+
+
 	}
-
-	for(size_t i = 1; i < numLayers; ++i) {
-		if(networkLayers[i].type == CONV) {
-			std::cout << "void ConvLayer::computeFeatureMap(std::vector<std::vector<double>> &inputMap)" << std::endl;
-			networkLayers[i].computeFeatureMaps(layerOutput);
-			std::cout << "CONV " << i << std::endl;
-			for (size_t t = layerOutput.size() - NIL[i]; t < layerOutput.size();++t) {
-				for (size_t l = 0; l < layerOutput[t].size(); ++l) {
-					for (size_t m = 0; m < layerOutput[t][l].size(); ++m)
-					std::cout << layerOutput[i][l][m] << " ";
-					std::cout << std::endl;
-				}
-				std::cout << std::endl;
-			}
-		
-		}
-
-		if(networkLayers[i].type == SUBSAMPLE) {
-			networkLayers[i].subsampleFeatureMaps(layerOutput);
-			std::cout << "void ConvLayer::subsampleFeatureMaps(std::vector<std::vector<std::vector<double>>> &inputMap)" << std::endl;
-			std::cout << "SUBS " << i <<std::endl;
-
-			for (size_t t = layerOutput.size() - NIL[i]; t < layerOutput.size(); ++t) {
-				for (size_t l = 0; l < layerOutput[t].size(); ++l) {
-					for (size_t m = 0; m < layerOutput[t][l].size(); ++m)
-						std::cout << layerOutput[i][l][m] << " ";
-					std::cout << std::endl;
-				}
-				std::cout << std::endl;
-			}
-		}
-		std::cout << "void ConvLayer::getAllFeatureMaps(std::vector<std::vector<std::vector<double>>> &resultMaps)" << std::endl;
-		networkLayers[i].getAllFeatureMaps(layerOutput);
-	}
-
-	//std::vector<std::vector<std::vector<double>>> lastLayerOutput;
-	//int lastLayer = networkLayers.size() - 1;
-	//networkLayers[lastLayer].getAllFeatureMaps(lastLayerOutput);
 
 	/* layerOutput now has the output of the last layer */
 	/* Check result feature maps for validity */
 	bool validNetworkOutput = true;
-	for(size_t i = layerOutput.size() - numLayeroutput; i < layerOutput.size(); ++i) {
+	for(size_t i = 0; i < layerOutput.size(); ++i) {
 		if((layerOutput[i].size() != 1) || (layerOutput[i][0].size() != 1)) {
 			validNetworkOutput = false;
 			break;
@@ -143,11 +96,11 @@ void ConvNetwork::processInputMap(int inputMapNumber, std::vector <double> &outp
 
 	/* Construct the result of the network */
 	if(validNetworkOutput) {
-        for (size_t i = layerOutput.size() - numLayeroutput; i < layerOutput.size(); ++i) {
+        for (size_t i = 0; i < layerOutput.size(); ++i) {
 			outputMap.push_back(layerOutput[i][0][0]);
 		}
 	} else {
-		throw InvalidResultArrayDimensionException;
+		throw /*InvalidResultArrayDimensionException*/;
 	}
 }
 
