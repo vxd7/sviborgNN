@@ -26,6 +26,7 @@ void SubsampleLayer::checkConfigValidity(ConfigManager &cfg, const std::string& 
 
 }
 
+//Constructor
 SubsampleLayer::SubsampleLayer(ConfigManager &cfg, const std::string& sectionName) {
 	checkConfigValidity(cfg, sectionName);
 
@@ -41,15 +42,10 @@ SubsampleLayer::SubsampleLayer(ConfigManager &cfg, const std::string& sectionNam
 	
 }
 
-void SubsampleLayer::ProcessSingleInput(const MATRIX& inputMap, const int neuronIndex) {
-	if(neuronIndex > numberOfNeurons) {
-		throw std::out_of_range("Out of range exception in subsampling layer");
+//Do subsampling
+void SubsampleLayer::ProcessLayerInput(const TRIPLET& inputMapList) {
+
+	for(int i = 0; i < numberOfNeurons; ++i) {
+		layerNeurons[i].subsampleMap(inputMapList[i]);
 	}
-
-	layerNeurons[neuronIndex].subsampleMap(inputMap);
-	
-}
-
-void SubsampleLayer::ProcessMultipleInput(const TRIPLET& inputMapList) {
-	
 }
