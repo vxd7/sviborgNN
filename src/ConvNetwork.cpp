@@ -10,7 +10,6 @@
 #include "ImageIface.h"
 
 ConvNetwork::ConvNetwork(std::string configFileName) {
-	std::cout << configFileName;
 	if(configFileName.size() != 0) {
 		globalNetworkConfigurer.readConfigFile(configFileName);
 	}
@@ -117,7 +116,7 @@ void ConvNetwork::getInput(std::string imageListFile) {
 
 ConvNetwork::~ConvNetwork() {
 	for(int i = 0; i < networkLayers.size(); ++i) {
-		delete networkLayers[i];
+		delete (networkLayers[i]);
 		
 	}
 	networkLayers.clear();
