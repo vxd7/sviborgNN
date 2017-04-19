@@ -104,6 +104,8 @@ void ImageIface::normalizeEverything() {
         }
         if (w > w_max) { w_max = w; }
         if (h > h_max) { h_max = h; }
+
+		stbi_image_free(map);
     }
 }
 void ImageIface::normalizeImageMatrix(std::vector<std::vector<double>> &imageMatrix) {
