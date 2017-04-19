@@ -52,8 +52,8 @@ void ConvNetwork::processInputMap(std::vector <double> &outputMap, int inputMapN
 
 	for (size_t i = 0; i < numLayers; ++i) {
 
-		networkLayers[i].ProcessLayerInput(layerOutput);
-		networkLayers[i].GetOutput(layerOutput);
+		networkLayers[i] -> ProcessLayerInput(layerOutput);
+		networkLayers[i] -> GetOutput(layerOutput);
 
 
 	}
@@ -76,12 +76,6 @@ void ConvNetwork::processInputMap(std::vector <double> &outputMap, int inputMapN
 	} else {
 		throw /*InvalidResultArrayDimensionException*/;
 	}
-}
-
-void ConvNetwork::processInputMap(std::vector <double> &outputMap) {
-    //definetly need a loop! 
-	std::cout << "ConvNetwork::processInputMap(int inputMapNumber, std::vector <double> &outputMap)" << std::endl;
-	processInputMap(1, outputMap);
 }
 
 void ConvNetwork::getInput(std::string imageListFile) {
