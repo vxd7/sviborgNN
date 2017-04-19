@@ -3,26 +3,25 @@
 #include <vector>
 #include <utility>
 
-#include "ConvLayer.h"
+#include "NetworkLayer.h"
 #include "ImageIface.h"
+#include "CustomTypes.h"
+#include "ConfigManager.h"
 
 class ConvNetwork
 {
 private:
     int numLayers;
-    int numLayeroutput;
     double learningSpeed;
-    std::vector <double> desiredOutputMap;
-	std::vector <ConvLayer> networkLayers;
-	std::vector<int> NIL;//neurons in layers
+	std::vector <NetworkLayer*> networkLayers;
+	ConfigManager globalNetworkConfigurer;
+
 
 	ImageIface inputImages;
+    std::vector <double> desiredOutputMap;
 public:
     // Initialization of Network;
-    ConvNetwork(const std::vector<int> &neuronsInLayers, const std::vector<std::pair<int, int>> &convCoresDim);
-
-    // Reading num of Layers from File;
-    ConvNetwork();
+    ConvNetwork(std::string configFileName);
 
     // Processing an output vector;
     void processInputMap(std::vector <double> &outputMap, int inputMapNumber = 0);
@@ -47,5 +46,5 @@ public:
 	 ******************/
 
     // Delete Network;
-    //~ConvNetwork();
+    ~ConvNetwork();
 };

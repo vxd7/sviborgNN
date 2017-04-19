@@ -9,52 +9,26 @@
 #include "NetworkException.h"
 #include "ImageIface.h"
 
-ConvNetwork::ConvNetwork(const std::vector<int> &neuronsInLayers, const std::vector<std::pair<int, int>> &convCoresDim) {
+ConvNetwork::ConvNetwork(std::string configFileName) {
+	if(configFileName.size() != 0) {
+		globalNetworkConfigurer.readConfigFile(configFileName);
+	}
 
-	int layersCount = neuronsInLayers.size();
+	//Read the number of layers from config file
+	globalNetworkConfigurer.getVal("global", "numLayers", numLayers);
+	networkLayers.resize(numLayers);
 
-	/**
-	 * Convolutional Neural Network consists of
-	 * convolutional and subsampling layer pairs.
-	 * If numLayers is not even, then we cannot construct a correct 
-	 * architecture. Throw an exception and warn user
-	 *
-	 * (layersCount + 1) because we count layers from 0 by default
-	 */
-	// if((layersCount + 1)%2 != 0) {
-	// 	std::string errorMsg("Incorrect number of layers. numLayers is not even!");
-
-	// 	throw std::invalid_argument(errorMsg);
-	// }
-
-	numLayers = layersCount;
-	std::cout << numLayers;
-
-	/* Construct the first layer -- CONV one*/
-	std::cout << "ConvLayer::ConvLayer(const int neuronCount, const std::pair<int, int> coreDim, const int inputImageHeight, const int inputImageWidth)" <<std::endl;
-	networkLayers.push_back(ConvLayer(neuronsInLayers[0], convCoresDim[0], 5, 5)); /* !HARDCODED INPUT W/H */
-	NIL.push_back(neuronsInLayers[0]);
-
-	/* Construct all the other layers */
-	/* j is for the convCoresDim array -- convolution cores dimensions */
-	for(size_t i = 1, j = 1; i < numLayers; ++i) {
-
+	std::cout << "Constructing layers, allocating memory" << std::endl;
+	for(int i = 0; i < numLayers; ++i) {
 		if(i%2 != 0) {
-			std::cout << "ConvLayer::ConvLayer(const int neuronCount, const LayerType newLayerType) " << std::endl;
-			networkLayers.push_back(ConvLayer(neuronsInLayers[i], SUBSAMPLE));
+			networkLayers[i] = new ConvolutionLayer(globalNetworkConfigurer, "conv" + std::to_string(i));
 		} else {
-			std::cout << "ConvLayer::ConvLayer(const int neuronCount, const std::pair<int, int> coreDim, const LayerType newLayerType) " << std::endl;
-			networkLayers.push_back(ConvLayer(neuronsInLayers[i], convCoresDim[j], CONV));
-			++j;
+			networkLayers[i] = new SubsampleLayer(globalNetworkConfigurer, "sbs" + std::to_string(i));
 		}
-        numLayeroutput = neuronsInLayers[i];
-		NIL.push_back(neuronsInLayers[i]);
+
 	}
 }
 
-ConvNetwork::ConvNetwork() {
-	
-}
 
 void ConvNetwork::processInputMap(std::vector <double> &outputMap, int inputMapNumber = 0) {
 	/**
@@ -78,8 +52,8 @@ void ConvNetwork::processInputMap(std::vector <double> &outputMap, int inputMapN
 
 	for (size_t i = 0; i < numLayers; ++i) {
 
-		networkLayers[i].ProcessLayerInput(layerOutput);
-		networkLayers[i].GetOutput(layerOutput);
+		networkLayers[i] -> ProcessLayerInput(layerOutput);
+		networkLayers[i] -> GetOutput(layerOutput);
 
 	}
 
@@ -133,4 +107,11 @@ void ConvNetwork::getInput(std::string imageListFile) {
 	std::cout << "void normalizeEverything()" << std::endl;
 	inputImages.normalizeEverything();
 
+}
+
+ConvNetwork::~ConvNetwork() {
+	for(int i = 0; i < networkLayers.size(); ++i) {
+		delete networkLayers[i];
+		
+	}
 }
