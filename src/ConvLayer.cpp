@@ -154,3 +154,7 @@ void ConvolutionLayer::WriteCoresToFiles(ConfigManager &cfg, std::string section
 		neurons[i].WriteCoreToFile(sectionName + "_neuron" + std::to_string(i));
 	}
 }
+
+ConvolutionLayer::~ConvolutionLayer() {
+	
+}

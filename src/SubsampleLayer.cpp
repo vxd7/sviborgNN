@@ -56,3 +56,7 @@ void SubsampleLayer::GetOutput(TRIPLET &Output) {
 		Output[i] = layerNeurons[i].getOuputMap();
 	}
 }
+
+SubsampleLayer::~SubsampleLayer() {
+	
+}

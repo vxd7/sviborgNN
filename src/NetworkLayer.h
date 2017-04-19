@@ -41,6 +41,11 @@ public:
 	void UnloadFeatureMaps();
 
 	virtual void GetOutput(TRIPLET &Output) = 0;
+
+	// Define a virtual destructor which does nothing.
+	// Actually this is pretty important. Otherwise
+	// there'd be a lot of memory leaks
+	virtual ~NetworkLayer() { }
 };
 
 class ConvolutionLayer : public NetworkLayer {
@@ -98,6 +103,8 @@ public:
 	void ReadAdjMatrix(std::string filename);
 
 	void GetOutput(TRIPLET &Output);
+
+	~ConvolutionLayer();
 };
 
 class SubsampleLayer : public NetworkLayer {
@@ -122,5 +129,7 @@ public:
 	void ProcessLayerInput(const TRIPLET& inputMapList);
 
 	void GetOutput(TRIPLET &Output);
+
+	~SubsampleLayer();
 
 };
