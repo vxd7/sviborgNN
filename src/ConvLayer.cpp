@@ -78,9 +78,6 @@ void ConvolutionLayer::GetOutput(TRIPLET &Output) {
 	}
 }
 
-std::vector<std::vector<double>>& SubsampleNeuron::getOuputMap() {
-	return outputFeatureMap;
-}
 
 void ConvolutionLayer::ReadSingleCore(ConfigManager &cfg, std::string sectionName, int neuronNumber, MATRIX &resCore) {
 	std::ifstream neuronCoreFile;
