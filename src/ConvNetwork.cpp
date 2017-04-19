@@ -10,19 +10,23 @@
 #include "ImageIface.h"
 
 ConvNetwork::ConvNetwork(std::string configFileName) {
+	std::cout << configFileName;
 	if(configFileName.size() != 0) {
 		globalNetworkConfigurer.readConfigFile(configFileName);
 	}
 
 	//Read the number of layers from config file
 	globalNetworkConfigurer.getVal("global", "numLayers", numLayers);
+
 	networkLayers.resize(numLayers);
 
 	std::cout << "Constructing layers, allocating memory" << std::endl;
 	for(int i = 0; i < numLayers; ++i) {
-		if(i%2 != 0) {
+		if(i%2 == 0) {
+			std::cout << "Allocating " << "conv" << i << std::endl;
 			networkLayers[i] = new ConvolutionLayer(globalNetworkConfigurer, "conv" + std::to_string(i));
 		} else {
+			std::cout << "Allocating " << "sbs" << i << std::endl;
 			networkLayers[i] = new SubsampleLayer(globalNetworkConfigurer, "sbs" + std::to_string(i));
 		}
 
@@ -116,4 +120,5 @@ ConvNetwork::~ConvNetwork() {
 		delete networkLayers[i];
 		
 	}
+	networkLayers.clear();
 }

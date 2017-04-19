@@ -9,7 +9,7 @@ ConvolutionLayer::ConvolutionLayer(ConfigManager &cfg, std::string sectionName) 
 	std::string filename_1;
 	int isRand;
 
-	cfg.getVal(sectionName, "numberofNeurons", numberOfNeurons);
+	cfg.getVal(sectionName, "numberOfNeurons", numberOfNeurons);
 	cfg.getVal(sectionName, "Random", isRand);
 	if (numberOfNeurons <= 0) {
 		std::string errorMsg("Incorrect neuron number! Function ConvolutionLayer::ConvolutionLayer(...)");
@@ -22,7 +22,7 @@ ConvolutionLayer::ConvolutionLayer(ConfigManager &cfg, std::string sectionName) 
 	// read cores;
 	for (int i = 0; i < numberOfNeurons; ++i) {
 		std::string filename_2 = "";
-		filename_2 = sectionName + "_neuron" + std::to_string(i+1) + ".txt";
+		filename_2 = sectionName + "_neuron" + std::to_string(i+1) + ".txt"; //WHY i+1 ???
 		ConvNeuron neuron(cfg, sectionName, filename_2, isRand);
 		neurons.push_back(neuron);
 	}
