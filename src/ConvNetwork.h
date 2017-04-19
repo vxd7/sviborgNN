@@ -26,9 +26,7 @@ public:
     ConvNetwork();
 
     // Processing an output vector;
-    void processInputMap(int inputMapNumber, std::vector <double> &outputMap);
-	//Process only first input map
-    void processInputMap(std::vector <double> &outputMap);
+    void processInputMap(std::vector <double> &outputMap, int inputMapNumber = 0);
 
     // Get list of images from FILE;
     void getInput(std::string imageListFile);

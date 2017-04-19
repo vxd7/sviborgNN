@@ -1,5 +1,5 @@
 #include "ConvNeuron.h"
-#include "ConfigManager.h"
+#include " ConfigManager.h"
 #include <string>
 #include <vector>
 #include <fstream>
@@ -64,26 +64,6 @@ void ConvNeuron::WriteCoreToFile(std::string configFiledName) {
 		}
 		coreFile << std::endl;
 	}
-}
-
-void ConvNeuron::Convolute(const MATRIX &InputMap) {	
-
-	int inputMapHeight = InputMap.size();
-	int inputMapWidth = InputMap[0].size();
-
-	ResizeOutput(inputMapHeight, inputMapWidth);
-	// convolution
-	for (int i = 0; i < OutputMap.size(); ++i) {
-		for (int j = 0; j < OutputMap[i].size(); ++j) {
-			double summ = 0;
-			summ = summate(InputMap,i,j);
-			summ = tFunc(summ);
-			summ += bias;
-			OutputMap[i][j] = summ;
-		}
-	}
-
-
 }
 
 double ConvNeuron::summate(const MATRIX &InputMap, int ipos, int jpos) {
