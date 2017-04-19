@@ -3,8 +3,9 @@
 #include <vector>
 #include <utility>
 
-#include "ConvLayer.h"
+#include "NetworkLayer.h"
 #include "ImageIface.h"
+#include "CustomTypes.h"
 
 class ConvNetwork
 {
@@ -13,7 +14,7 @@ private:
     int numLayeroutput;
     double learningSpeed;
     std::vector <double> desiredOutputMap;
-	std::vector <ConvLayer> networkLayers;
+	std::vector <NetworkLayer*> networkLayers;
 	std::vector<int> NIL;//neurons in layers
 
 	ImageIface inputImages;
