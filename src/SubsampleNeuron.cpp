@@ -8,10 +8,9 @@
 
 
 SubsampleNeuron::SubsampleNeuron(ConfigManager& cfg, const std::string& sectionName) {
-	/* Get subsample coefficient from config file */
 	cfg.getVal(sectionName, "subsampleCoeff", subsampleCoeff);
 	cfg.getVal(sectionName, "neuronBias", neuronBias);
-	cfg.getVal("general", "exponentThresholdFunction", exponentThresholdFunction);
+	cfg.getVal(sectionName, "exponentThresholdFunction", exponentThresholdFunction);
 	
 }
 
