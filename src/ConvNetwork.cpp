@@ -30,7 +30,7 @@ ConvNetwork::ConvNetwork(std::string configFileName) {
 }
 
 
-void ConvNetwork::processInputMap(std::vector <double> &outputMap, int inputMapNumber = 0) {
+void ConvNetwork::processInputMap(std::vector <double> &outputMap, int inputMapNumber) {
 	/**
 	 * Load an input map
 	 */
@@ -61,8 +61,10 @@ void ConvNetwork::processInputMap(std::vector <double> &outputMap, int inputMapN
 	/* Check result feature maps for validity */
 	bool validNetworkOutput = true;
 	for (size_t i = 0; i < layerOutput.size(); ++i) {
-		if ((layerOutput[i].size() != 1) || (layerOutput[i][0].size() != 1))
+		if ((layerOutput[i].size() != 1) || (layerOutput[i][0].size() != 1)) {
 			validNetworkOutput = false;
+			break;
+		}
 	}
 
 	/* Construct the result of the network */

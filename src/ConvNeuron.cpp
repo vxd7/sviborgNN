@@ -1,5 +1,5 @@
 #include "ConvNeuron.h"
-#include " ConfigManager.h"
+#include "ConfigManager.h"
 #include <string>
 #include <vector>
 #include <fstream>
