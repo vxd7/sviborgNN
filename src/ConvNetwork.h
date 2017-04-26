@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <utility>
+#include <memory>
 
 #include "NetworkLayer.h"
 #include "ImageIface.h"
@@ -13,7 +14,7 @@ class ConvNetwork
 private:
     int numLayers;
     double learningSpeed;
-	std::vector <NetworkLayer*> networkLayers;
+	std::vector <std::unique_ptr<NetworkLayer>> networkLayers;
 	ConfigManager globalNetworkConfigurer;
 
 
@@ -45,6 +46,4 @@ public:
 	 * Misc functions *
 	 ******************/
 
-    // Delete Network;
-    ~ConvNetwork();
 };

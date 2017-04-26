@@ -88,7 +88,17 @@ void ConvolutionLayer::ReadSingleCore(ConfigManager &cfg, std::string sectionNam
 
 	std::string fileName_1 = sectionName + "_neuron" + std::to_string(neuronNumber);
 	std::string fileName_2;
-	cfg.getVal(sectionName, fileName_1, fileName_2);
+
+	// Read filename if token present
+	if(cfg.isTokenPresent(sectionName, fileName_1)) {
+		cfg.getVal(sectionName, fileName_1, fileName_2);
+	} else {
+		// Else consider it to be in the current directory
+		// and named as `sectionName'_neuron`i'.txt
+		//
+		// Thus let fileName_2 be fileName_1
+		fileName_2 = fileName_1;
+	}
 	neuronCoreFile.open(fileName_2, std::ios::in);
 
 	if (resCore.size() != neuronCoreHeight) {
@@ -156,5 +166,6 @@ void ConvolutionLayer::WriteCoresToFiles(ConfigManager &cfg, std::string section
 }
 
 ConvolutionLayer::~ConvolutionLayer() {
+	std::cout << "conv dstr" << std::endl;
 	
 }

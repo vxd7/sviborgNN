@@ -4,6 +4,7 @@
 #include <string>
 #include <stdexcept>
 #include <utility>
+#include <memory>
 
 #include "ConvNetwork.h"
 #include "NetworkException.h"
@@ -17,16 +18,20 @@ ConvNetwork::ConvNetwork(std::string configFileName) {
 	//Read the number of layers from config file
 	globalNetworkConfigurer.getVal("global", "numLayers", numLayers);
 
-	networkLayers.resize(numLayers);
-
-	std::cout << "Constructing layers, allocating memory" << std::endl;
+	std::cout << "Constructing layers" << std::endl;
 	for(int i = 0; i < numLayers; ++i) {
 		if(i%2 == 0) {
-			std::cout << "Allocating " << "conv" << i << std::endl;
-			networkLayers[i] = new ConvolutionLayer(globalNetworkConfigurer, "conv" + std::to_string(i));
+			std::cout << "Constructing " << "conv" << i << std::endl;
+			std::unique_ptr<NetworkLayer> nlPtr(new ConvolutionLayer(globalNetworkConfigurer, 
+						"conv" + std::to_string(i)));
+
+			networkLayers.push_back(std::move(nlPtr));
 		} else {
-			std::cout << "Allocating " << "sbs" << i << std::endl;
-			networkLayers[i] = new SubsampleLayer(globalNetworkConfigurer, "sbs" + std::to_string(i));
+			std::cout << "Constructing " << "sbs" << i << std::endl;
+			std::unique_ptr<NetworkLayer> nlPtr(new SubsampleLayer(globalNetworkConfigurer, 
+						"sbs" + std::to_string(i)));
+
+			networkLayers.push_back(std::move(nlPtr));
 		}
 
 	}
@@ -112,12 +117,4 @@ void ConvNetwork::getInput(std::string imageListFile) {
 	std::cout << "void normalizeEverything()" << std::endl;
 	inputImages.normalizeEverything();
 
-}
-
-ConvNetwork::~ConvNetwork() {
-	for(int i = 0; i < networkLayers.size(); ++i) {
-		delete (networkLayers[i]);
-		
-	}
-	networkLayers.clear();
 }

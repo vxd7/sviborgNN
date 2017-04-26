@@ -58,5 +58,6 @@ void SubsampleLayer::GetOutput(TRIPLET &Output) {
 }
 
 SubsampleLayer::~SubsampleLayer() {
+	std::cout << "sbs dstr" << std::endl;
 	
 }

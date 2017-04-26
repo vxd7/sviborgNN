@@ -4,6 +4,7 @@
 #include "ConfigManager.h"
 
 #include <string>
+#include <iostream>
 
 class NetworkLayer {
 private:
@@ -131,5 +132,4 @@ public:
 	void GetOutput(TRIPLET &Output);
 
 	~SubsampleLayer();
-
 };
