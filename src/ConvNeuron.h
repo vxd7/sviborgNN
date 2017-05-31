@@ -15,7 +15,7 @@ public:
 
 	void GetOutput(MATRIX &tmp);
 
-	void ProcessMaps(const TRIPLET &inputMaps);
+	void ProcessMaps(const TRIPLET &inputMaps, bool bp_on = false);
 
 	void ResizeOutput(int InputMapHeight, int InputMapWidth);
 
@@ -27,11 +27,15 @@ public:
 private:
 	MATRIX OutputMap;
 	
+	MATRIX bpDerivativeValue;
+
 	double bias = 1.0;
 
 	void RandomizeCores();
 
 	double summate(const MATRIX &InputMap, int ipos, int jpos);
 	
-	double tFunc(double x);
+	double tFunc(const double x);
+
+	double tFuncDerivative(const double x);
 };

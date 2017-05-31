@@ -14,7 +14,7 @@ SubsampleNeuron::SubsampleNeuron(ConfigManager& cfg, const std::string& sectionN
 	
 }
 
-void SubsampleNeuron::subsampleMap(const std::vector<std::vector<double>>& inputMap) {
+void SubsampleNeuron::subsampleMap(const std::vector<std::vector<double>>& inputMap, bool bp_on) {
 	size_t inputMapHeight = inputMap.size();
 	size_t inputMapWidth = inputMap[0].size();
 
@@ -61,8 +61,13 @@ void SubsampleNeuron::subsampleMap(const std::vector<std::vector<double>>& input
 			summ *= subsampleCoeff;
 			summ += neuronBias;
 
+			if (bp_on) {
+				bpDerivativeValue[fmapi][fmapj] = sigmoidTresholdFuncDerivative(summ);
+			}
+
 			summ = sigmoidTresholdFunc(summ);
 			outputFeatureMap[fmapi][fmapj] = summ;
+			
 		}
         fmapj = 0;
 	}
@@ -80,6 +85,11 @@ double SubsampleNeuron::sigmoidTresholdFunc(const double& x) {
 	
     double res = 1.0 / (1.0 + exp((-1.0) * x*exponentThresholdFunction));
     return res;
+}
+double SubsampleNeuron::sigmoidTresholdFuncDerivative(const double& x) {
+	// add exceptions;
+	double res = exponentThresholdFunction*sigmoidTresholdFunc(x)*(1 - sigmoidTresholdFunc(x));
+	return res;
 }
 
 std::vector<std::vector<double>>& SubsampleNeuron::getOuputMap() {

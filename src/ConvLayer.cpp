@@ -29,7 +29,7 @@ ConvolutionLayer::ConvolutionLayer(ConfigManager &cfg, std::string sectionName) 
 
 }
 
-void ConvolutionLayer::ProcessLayerInput(const TRIPLET &InputMaps) {
+void ConvolutionLayer::ProcessLayerInput(const TRIPLET &InputMaps, bool bp_on) {
 
 
 	/**
@@ -47,7 +47,7 @@ void ConvolutionLayer::ProcessLayerInput(const TRIPLET &InputMaps) {
 			}
 		}
 		std::cout << "void ConvNeuron::processMaps(const std::vector<std::vector <std::vector<double>>> &inputMaps)" << std::endl;
-		neurons[i].ProcessMaps(neuronPacket);
+		neurons[i].ProcessMaps(neuronPacket, bp_on);
 	}
 
 }

@@ -9,7 +9,7 @@ class NetworkLayer {
 private:
 
 public:
-	virtual void ProcessLayerInput(const TRIPLET& inputMapList) = 0;
+	virtual void ProcessLayerInput(const TRIPLET& inputMapList, bool bp_on = false) = 0;
 
 	 // ************************************** // 
 	 // * Feature map manipulation functions * //
@@ -65,7 +65,7 @@ public:
 	*
 	*/
 
-	void ProcessLayerInput(const TRIPLET& inputMapList);
+	void ProcessLayerInput(const TRIPLET& inputMapList, bool bp_on = false);
 	
 	// ********************************************** //
 	// * Convolutional cores manipulation functions * //
@@ -126,9 +126,11 @@ private:
 public:
 	SubsampleLayer(ConfigManager &cfg, const std::string& sectionName);
 
-	void ProcessLayerInput(const TRIPLET& inputMapList);
+	void ProcessLayerInput(const TRIPLET& inputMapList, bool bp_on = false);
 
 	void GetOutput(TRIPLET &Output);
+
+	void GetBPOutput();
 
 	~SubsampleLayer();
 

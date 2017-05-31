@@ -8,7 +8,7 @@
 
 class SubsampleNeuron {
 private:
-	std::vector<std::vector<double>> outputFeatureMap;
+	MATRIX outputFeatureMap;
 
 	/* These are standart values and cannot be overriden
 	 * See Yan LeKunn works for more info */
@@ -20,13 +20,16 @@ private:
 	double neuronBias;
 	double exponentThresholdFunction;
 
+	MATRIX bpDerivativeValue;
+
 public:
 	SubsampleNeuron(ConfigManager& cfg, const std::string& sectionName);
 
-	void subsampleMap(const std::vector<std::vector<double>>& inputMap);
+	void subsampleMap(const std::vector<std::vector<double>>& inputMap, bool bp_on = false);
 
 	std::vector<std::vector<double>>& getOuputMap();
     double sigmoidTresholdFunc(const double& x);
+	double sigmoidTresholdFuncDerivative(const double& x);
 
 	int outputMapHeight;
 	int outputMapWidth;
