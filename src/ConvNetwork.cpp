@@ -123,3 +123,60 @@ void ConvNetwork::getInput(std::string imageListFile) {
 	inputImages.normalizeEverything();
 
 }
+
+void ConvNetwork::BackPropLearning(std::vector<double> DesiredOutputMap, double learningSpeed, int inputMapNumber) {
+	/**
+	* Load an input map
+	*/
+	MATRIX inputMap;
+	inputImages.computeGrayscaleMatrix(inputMapNumber, inputMap);
+	// output for debugging
+	std::cout << "Input Map" << std::endl;
+	for (int i = 0; i < inputMap.size(); ++i) {
+		for (int j = 0; j < inputMap[i].size(); ++j) {
+			std::cout << inputMap[i][j] << " ";
+		}
+		std::cout << std::endl;
+	}
+	/*
+	* Forward pass for backpropagation;
+	*/
+	bool backprop_on = true;
+	TRIPLET layerOutput;
+	layerOutput.push_back(inputMap);
+
+	for (size_t i = 0; i < numLayers; ++i) {
+
+		networkLayers[i]->ProcessLayerInput(layerOutput,backprop_on);
+		networkLayers[i]->GetOutput(layerOutput);
+		
+	}
+
+	/* layerOutput now has the output of the last layer */
+	/* Check result feature maps for validity */
+	bool validNetworkOutput = true;
+	for (size_t i = 0; i < layerOutput.size(); ++i) {
+		if ((layerOutput[i].size() != 1) || (layerOutput[i][0].size() != 1)) {
+			validNetworkOutput = false;
+			break;
+		}
+	}
+
+	/* Construct the result of the network */
+	if (validNetworkOutput) {
+		for (size_t i = 0; i < layerOutput.size(); ++i) {
+			outputMap.push_back(layerOutput[i][0][0]);
+		}
+	}
+	else {
+		throw /*InvalidResultArrayDimensionException*/;
+	}
+}
+
+ConvNetwork::~ConvNetwork() {
+	for(int i = 0; i < networkLayers.size(); ++i) {
+		delete (networkLayers[i]);
+		
+	}
+	networkLayers.clear();
+}

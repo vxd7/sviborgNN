@@ -76,14 +76,19 @@ double ConvNeuron::summate(const MATRIX &InputMap, int ipos, int jpos) {
 	return summ;
 }
 
-double ConvNeuron::tFunc(double x) {	
+double ConvNeuron::tFunc(const double x) {	
 	/*double a =(10000*tanh(-1))/7615;*/
 	return (10000 * tanh(x)) / 7615; // 10000/7615 coeff is amplitude which makes equalities f(1)=1 and f(-1)=-1 satisfied
 }
 
-void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps) {
+double ConvNeuron::tFuncDerivative(const double x) {
+	return 1 - tFunc(x)*tFunc(x);
+}
+
+void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps, bool bp_on) {
 
 	double sectorSumm = 0;
+	double sectorSummBP = 0;
 
 	if (!inputMaps.size()) {
 		std::string errorMsg("Incorrect neuron Input! Function ConvNeuron::ProcessMaps(...)");
@@ -103,11 +108,18 @@ void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps) {
 				for (int i = 0; i < inputMaps.size(); ++i) {
 					double summ = 0;
 					summ = summate(inputMaps[i], i, j);
+					if (bp_on) {
+						double bp_summ = summ;
+						bp_summ = tFuncDerivative(bp_summ);
+						bp_summ += bias;
+						bpDerivativeValue[j][k] += bp_summ;
+					}
 					summ = tFunc(summ);
 					summ += bias;
 					sectorSumm += summ;
 				}
 				OutputMap[j][k] += sectorSumm;
+
 			}
 
 		}

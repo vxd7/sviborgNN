@@ -43,10 +43,10 @@ SubsampleLayer::SubsampleLayer(ConfigManager &cfg, const std::string& sectionNam
 }
 
 //Do subsampling
-void SubsampleLayer::ProcessLayerInput(const TRIPLET& inputMapList) {
+void SubsampleLayer::ProcessLayerInput(const TRIPLET& inputMapList, bool bp_on) {
 
 	for(int i = 0; i < numberOfNeurons; ++i) {
-		layerNeurons[i].subsampleMap(inputMapList[i]);
+		layerNeurons[i].subsampleMap(inputMapList[i], bp_on);
 	}
 }
 
