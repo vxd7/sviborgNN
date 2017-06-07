@@ -19,21 +19,26 @@ ConvNetwork::ConvNetwork(std::string configFileName) {
 	globalNetworkConfigurer.getVal("global", "numLayers", numLayers);
 
 	std::cout << "Constructing layers" << std::endl;
-	for(int i = 0; i < numLayers; ++i) {
-		if(i%2 == 0) {
-			std::cout << "Constructing " << "conv" << i << std::endl;
-			std::unique_ptr<NetworkLayer> nlPtr(new ConvolutionLayer(globalNetworkConfigurer, 
-						"conv" + std::to_string(i)));
+	try {
+		for(int i = 0; i < numLayers; ++i) {
+			if(i%2 == 0) {
+				std::cout << "Constructing " << "conv" << i << std::endl;
+				std::unique_ptr<NetworkLayer> nlPtr(new ConvolutionLayer(globalNetworkConfigurer, 
+							"conv" + std::to_string(i)));
 
-			networkLayers.push_back(std::move(nlPtr));
-		} else {
-			std::cout << "Constructing " << "sbs" << i << std::endl;
-			std::unique_ptr<NetworkLayer> nlPtr(new SubsampleLayer(globalNetworkConfigurer, 
-						"sbs" + std::to_string(i)));
+				networkLayers.push_back(std::move(nlPtr));
+			} else {
+				std::cout << "Constructing " << "sbs" << i << std::endl;
+				std::unique_ptr<NetworkLayer> nlPtr(new SubsampleLayer(globalNetworkConfigurer, 
+							"sbs" + std::to_string(i)));
 
-			networkLayers.push_back(std::move(nlPtr));
+				networkLayers.push_back(std::move(nlPtr));
+			}
+
 		}
-
+	} catch(std::exception& ex) {
+		std::cout << ex.what() << std::endl;
+		throw;
 	}
 }
 
