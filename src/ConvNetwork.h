@@ -38,7 +38,7 @@ public:
     void getBPLearningParameters();
 
     // BP learning;
-	void BackPropLearning(std::vector<double>& outputMap, std::vector<double>& DesiredOutputMap, const double learningSpeed, const int inputMapNumber);
+	void BackPropLearning(std::vector<double>& DesiredOutputMap, const double learningSpeed, const int inputMapNumber);
 
     double GradientNeuron();
 

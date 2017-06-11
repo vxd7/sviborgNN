@@ -124,7 +124,7 @@ void ConvNetwork::getInput(std::string imageListFile) {
 
 }
 
-void ConvNetwork::BackPropLearning(std::vector<double>& outputMap, std::vector<double>& DesiredOutputMap, const double learningSpeed, const int inputMapNumber) {
+void ConvNetwork::BackPropLearning(std::vector<double>& DesiredOutputMap, const double learningSpeed, const int inputMapNumber) {
 	/**
 	* Load an input map
 	*/
@@ -162,13 +162,9 @@ void ConvNetwork::BackPropLearning(std::vector<double>& outputMap, std::vector<d
 		}
 	}
 
-	/* Construct the result of the network */
-	if (validNetworkOutput) {
-		for (size_t i = 0; i < layerOutput.size(); ++i) {
-			outputMap.push_back(layerOutput[i][0][0]);
-		}
+	double Error;
+	for (size_t i = 0; i < DesiredOutputMap.size(); ++i) {
+		Error += 0.5 * pow((DesiredOutputMap[i] - layerOutput[i][0][0]),2);
 	}
-	else {
-		throw /*InvalidResultArrayDimensionException*/;
-	}
+
 }

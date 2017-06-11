@@ -120,7 +120,7 @@ void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps, bool bp_on) {
 					summ += bias;
 					sectorSumm += summ;
 				}
-				OutputMap[j][k] += sectorSumm;
+				OutputMap[j][k] += sectorSumm;	
 				sectorSumm = 0;
 
 			}
