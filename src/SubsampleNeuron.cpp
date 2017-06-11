@@ -62,15 +62,16 @@ void SubsampleNeuron::subsampleMap(const std::vector<std::vector<double>>& input
 			elems.push_back(inputMapLocalCopy[i + 1][j]);
 			elems.push_back(inputMapLocalCopy[i][j + 1]);
 			elems.push_back(inputMapLocalCopy[i + 1][j + 1]);
-
 			summ = getMax(elems);
+			
+			// save winning unit location in subsample matrix size 2x2. In b-pass we'll be setting elements
+			// of matrix in new expanded matrix with respect to winning locations;
+			if (bp_on) {
+				winning_unit.push_back(std::make_pair(std::distance(elems.begin(), std::max_element(elems.begin(), elems.end())), (winning_unit_i - 1) / 2);
+			}
 
 			summ *= subsampleCoeff;
 			summ += neuronBias;
-
-			if (bp_on) {
-				bpDerivativeValue[fmapi][fmapj] = sigmoidTresholdFuncDerivative(summ);
-			}
 
 			outputFeatureMap[fmapi][fmapj] = summ;
 			
@@ -82,7 +83,6 @@ void SubsampleNeuron::subsampleMap(const std::vector<std::vector<double>>& input
 
 double SubsampleNeuron::getMax(const std::vector<double>& elems) {
 	return *(std::max_element(elems.begin(), elems.end()));
-	
 }
 
 /* Treshold function

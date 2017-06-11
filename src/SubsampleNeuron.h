@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <utility>
 
 #include "ConfigManager.h"
 #include "CustomTypes.h"
@@ -32,6 +33,8 @@ public:
     double sigmoidTresholdFunc(const double& x);
 	double sigmoidTresholdFuncDerivative(const double& x);
 
+	int winning_unit_i;
+	std::vector<std::pair<int,int>> winning_unit;
 	int outputMapHeight;
 	int outputMapWidth;
 
