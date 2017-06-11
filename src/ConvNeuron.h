@@ -29,7 +29,7 @@ private:
 	
 	MATRIX bpDerivativeValue;
 
-	double bias = 1.0;
+	double bias;
 
 	void RandomizeCores();
 

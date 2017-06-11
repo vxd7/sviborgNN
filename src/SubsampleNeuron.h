@@ -28,6 +28,7 @@ public:
 	void subsampleMap(const std::vector<std::vector<double>>& inputMap, bool bp_on = false);
 
 	std::vector<std::vector<double>>& getOuputMap();
+	double getMax(const std::vector<double>& elems);
     double sigmoidTresholdFunc(const double& x);
 	double sigmoidTresholdFuncDerivative(const double& x);
 

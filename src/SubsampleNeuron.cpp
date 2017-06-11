@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <algorithm>
 
 #include "SubsampleNeuron.h"
 #include "ConfigManager.h"
@@ -46,7 +47,7 @@ void SubsampleNeuron::subsampleMap(const std::vector<std::vector<double>>& input
 		}
     } else {
 		InvalidResultArrayDimension InvalidResultArrayDimensionException;
-		throw InvalidResultArrayDimensionException;
+		throw InvalidResultArrayDimensionException; //XXX: debug why exception throws
 	}
 
 
@@ -55,8 +56,14 @@ void SubsampleNeuron::subsampleMap(const std::vector<std::vector<double>>& input
 	for(size_t i = 0; i < inputMapHeight-1; i += 2, fmapi++) {
 		for(size_t j = 0; j < inputMapWidth-1; j += 2, fmapj++) {
 			double summ;
-			summ = inputMapLocalCopy[i][j] + inputMapLocalCopy[i + 1][j] +
-			   	inputMapLocalCopy[i][j + 1] + inputMapLocalCopy[i + 1][j + 1];
+			std::vector<double> elems;
+
+			elems.push_back(inputMapLocalCopy[i][j]);
+			elems.push_back(inputMapLocalCopy[i + 1][j]);
+			elems.push_back(inputMapLocalCopy[i][j + 1]);
+			elems.push_back(inputMapLocalCopy[i + 1][j + 1]);
+
+			summ = getMax(elems);
 
 			summ *= subsampleCoeff;
 			summ += neuronBias;
@@ -65,12 +72,16 @@ void SubsampleNeuron::subsampleMap(const std::vector<std::vector<double>>& input
 				bpDerivativeValue[fmapi][fmapj] = sigmoidTresholdFuncDerivative(summ);
 			}
 
-			summ = sigmoidTresholdFunc(summ);
 			outputFeatureMap[fmapi][fmapj] = summ;
 			
 		}
         fmapj = 0;
 	}
+	
+}
+
+double SubsampleNeuron::getMax(const std::vector<double>& elems) {
+	return *(std::max_element(elems.begin(), elems.end()));
 	
 }
 
