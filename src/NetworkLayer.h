@@ -53,6 +53,7 @@ class ConvolutionLayer : public NetworkLayer {
 private:
 	// All data here
 	std::vector<ConvNeuron> neurons;
+	double bias = 0.1;
 	int numberOfNeurons;
 	MATRIX adjMatrix;
 

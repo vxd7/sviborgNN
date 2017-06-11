@@ -32,12 +32,14 @@ ConvNeuron::ConvNeuron(ConfigManager &cfg, std::string sectionName, std::string 
 		//writing random cores to file;
 		WriteCoreToFile(configFiledName);
 	}
+	bias = 0.1;
 }
 
 ConvNeuron::ConvNeuron(int dimHeigth, int dimWidth) {
 	convMatrixHeight = dimHeigth;
 	convMatrixWidth = dimWidth;
 	RandomizeCores();
+	bias = 0.1;
 }
 
 
@@ -107,7 +109,7 @@ void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps, bool bp_on) {
 			for (int k = 0; k < OutputMap[j].size(); ++k) {
 				for (int i = 0; i < inputMaps.size(); ++i) {
 					double summ = 0;
-					summ = summate(inputMaps[i], i, j);
+					summ = summate(inputMaps[i], j, k);
 					if (bp_on) {
 						double bp_summ = summ;
 						bp_summ = tFuncDerivative(bp_summ);
@@ -119,6 +121,7 @@ void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps, bool bp_on) {
 					sectorSumm += summ;
 				}
 				OutputMap[j][k] += sectorSumm;
+				sectorSumm = 0;
 
 			}
 
