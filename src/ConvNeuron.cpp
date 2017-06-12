@@ -109,11 +109,13 @@ void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps, bool bp_on) {
 			for (int k = 0; k < OutputMap[j].size(); ++k) {
 				for (int i = 0; i < inputMaps.size(); ++i) {
 					double summ = 0;
+					// summ(w_i_j * a_i_j)
 					summ = summate(inputMaps[i], j, k);
 					if (bp_on) {
 						double bp_summ = summ;
 						bp_summ = tFuncDerivative(bp_summ);
-						bp_summ += bias;
+						// in respect to the articles we should not add bias here...
+						//bp_summ += bias;
 						bpDerivativeValue[j][k] += bp_summ;
 					}
 					summ = tFunc(summ);

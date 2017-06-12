@@ -107,7 +107,7 @@ std::vector<std::vector<double>>& SubsampleNeuron::getOuputMap() {
 	return outputFeatureMap;
 }
 // some shit, needs consideration
-void SubsampleNeuron::processBProp(MATRIX& Errors){
+void SubsampleNeuron::processBProp(MATRIX &Errors){
 	MATRIX tmp;
 	tmp.resize(Errors.size() * 2);
 	for (size_t i = 0; i < Errors.size() * 2; ++i) {
