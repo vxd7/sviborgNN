@@ -10,6 +10,7 @@
 class SubsampleNeuron {
 private:
 	MATRIX outputFeatureMap;
+	MATRIX BPOutput;
 
 	/* These are standart values and cannot be overriden
 	 * See Yan LeKunn works for more info */
@@ -34,6 +35,7 @@ public:
 	double sigmoidTresholdFuncDerivative(const double& x);
 	// processBProp expands the errors matrix!
 	void processBProp(MATRIX &Errors);
+	std::vector<std::vector<double>>& getBPOutput();
 
 	int winning_unit_i;
 	std::vector<std::pair<int,int>> winning_unit;

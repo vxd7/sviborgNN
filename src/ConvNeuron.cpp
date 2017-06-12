@@ -137,23 +137,42 @@ void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps, bool bp_on) {
 void ConvNeuron::ResizeOutput(int InputMapHeight, int InputMapWidth) {
 	//resizing output feature map
 	OutputMap.resize(InputMapHeight - convMatrixHeight + 1);
-	for (int i = 0; i < OutputMap.size(); ++i) {
+	for (size_t i = 0; i < OutputMap.size(); ++i) {
 		OutputMap[i].resize(InputMapWidth - convMatrixWidth + 1);
 	}
 
 }
+void ConvNeuron::ResizeBPOutput(int InputMapHeight, int InputMapWidth) {
+	//resizing error map
+	BPOutput.resize(OutputMap.size() + convMatrixHeight - 1);
+	for (size_t i = 0; i < OutputMap.size(); ++i) {
+		BPOutput[i].resize(OutputMap[i].size() + convMatrixWidth - 1);
+	}
+}
+
 void ConvNeuron::GetOutput(MATRIX &tmp) {
 	tmp = OutputMap;
 }
 // requires consideration!
 void ConvNeuron::ProcessBProp(const TRIPLET &inputErrors) {
-	// Errors output???
-	
+
+	int inputMapHeight, inputMapWidth;
+	inputMapHeight = inputErrors[0].size();
+	inputMapWidth = inputErrors[0][0].size();
+
+	ResizeBPOutput(inputMapHeight, inputMapWidth);
+
+	for (size_t i = 0; i < )
+
 	for (size_t i = 0; i < bpDerivativeValue.size(); ++i) {
 		for (size_t j = 0; j < bpDerivativeValue[i].size(); ++j) {
 			// bpDerivativeValue * rot(w) * delta_l+1!!!
 			// summate rot 
-			outputErrors[i][j] = bpDerivativeValue[i][j]* ConvCore[ConvCore.size() - i][ConvCore.size() - j] * Deltas[i][j] * OutputMap[i][j];
+//			outputErrors[i][j] = bpDerivativeValue[i][j]* ConvCore[ConvCore.size() - i][ConvCore.size() - j] * Deltas[i][j] * OutputMap[i][j];
 		}
 	}
+}
+
+void ConvNeuron::GetBPOutput(MATRIX &tmp) {
+	tmp = BPOutput;
 }

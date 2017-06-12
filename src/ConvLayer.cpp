@@ -30,7 +30,7 @@ ConvolutionLayer::ConvolutionLayer(ConfigManager &cfg, std::string sectionName) 
 }
 
 void ConvolutionLayer::ProcessLayerInput(const TRIPLET &InputMaps, bool bp_on) {
-
+		
 
 	/**
 	* Construct packets of feature maps
@@ -48,6 +48,22 @@ void ConvolutionLayer::ProcessLayerInput(const TRIPLET &InputMaps, bool bp_on) {
 		}
 		std::cout << "void ConvNeuron::processMaps(const std::vector<std::vector <std::vector<double>>> &inputMaps)" << std::endl;
 		neurons[i].ProcessMaps(neuronPacket, bp_on);
+	}
+
+}
+
+void ConvolutionLayer::ProcessBackProp(const TRIPLET &InputErrors) {
+	for (size_t i = 0; i < numberOfNeurons; ++i) {
+		TRIPLET neuronPacket;
+
+		for (size_t j = 0; j < adjMatrix.size(); ++j) {
+			// transposed adj matrix;
+			if (adjMatrix[i][j]) {
+				neuronPacket.push_back(InputErrors[j]);
+			}
+		}
+		std::cout << "void ConvNeuron::processBProp" << std::endl;
+		neurons[i].ProcessBProp(neuronPacket);
 	}
 
 }
