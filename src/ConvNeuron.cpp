@@ -143,3 +143,15 @@ void ConvNeuron::ResizeOutput(int InputMapHeight, int InputMapWidth) {
 void ConvNeuron::GetOutput(MATRIX &tmp) {
 	tmp = OutputMap;
 }
+// requires consideration!
+void ConvNeuron::ProcessBProp(const TRIPLET &inputErrors) {
+	// Errors output???
+	
+	for (size_t i = 0; i < bpDerivativeValue.size(); ++i) {
+		for (size_t j = 0; j < bpDerivativeValue[i].size(); ++j) {
+			// bpDerivativeValue * rot(w) * delta_l+1!!!
+			// summate rot 
+			outputErrors[i][j] = bpDerivativeValue[i][j]* ConvCore[ConvCore.size() - i][ConvCore.size() - j] * Deltas[i][j] * OutputMap[i][j];
+		}
+	}
+}

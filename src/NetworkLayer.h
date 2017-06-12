@@ -12,6 +12,8 @@ private:
 public:
 	virtual void ProcessLayerInput(const TRIPLET& inputMapList, bool bp_on = false) = 0;
 
+	virtual void ProcessBackProp(const TRIPLET& inputMapList) = 0;
+
 	 // ************************************** // 
 	 // * Feature map manipulation functions * //
 	 // ************************************** // 
@@ -43,6 +45,8 @@ public:
 
 	virtual void GetOutput(TRIPLET &Output) = 0;
 
+	virtual void GetBPOutput(TRIPLET &Output) = 0;
+
 	// Define a virtual destructor which does nothing.
 	// Actually this is pretty important. Otherwise
 	// there'd be a lot of memory leaks
@@ -68,6 +72,8 @@ public:
 	*/
 
 	void ProcessLayerInput(const TRIPLET& inputMapList, bool bp_on = false);
+
+	void ProcessBackProp(const TRIPLET& inputMapList);
 	
 	// ********************************************** //
 	// * Convolutional cores manipulation functions * //
@@ -106,6 +112,8 @@ public:
 
 	void GetOutput(TRIPLET &Output);
 
+	void GetBPOutput(TRIPLET &Output);
+
 	~ConvolutionLayer();
 };
 
@@ -130,9 +138,11 @@ public:
 
 	void ProcessLayerInput(const TRIPLET& inputMapList, bool bp_on = false);
 
+	void ProcessBackProp(const TRIPLET& inputMapList);
+
 	void GetOutput(TRIPLET &Output);
 
-	void GetBPOutput();
+	void GetBPOutput(TRIPLET &Output);
 
 	~SubsampleLayer();
 };

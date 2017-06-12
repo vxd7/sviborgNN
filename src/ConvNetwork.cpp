@@ -162,9 +162,18 @@ void ConvNetwork::BackPropLearning(std::vector<double>& DesiredOutputMap, const 
 		}
 	}
 
-	double Error;
+	TRIPLET Error;
+	double tmp = 0;
 	for (size_t i = 0; i < DesiredOutputMap.size(); ++i) {
-		Error += 0.5 * pow((DesiredOutputMap[i] - layerOutput[i][0][0]),2);
+		tmp += 0.5 * pow((DesiredOutputMap[i] - layerOutput[i][0][0]),2);
+	}
+	Error[0][0].push_back(tmp);
+
+	for (size_t i = 0; i < numLayers; ++i) {
+
+		networkLayers[i]->ProcessBackProp(Error);
+		networkLayers[i]->GetBPOutput(Error);
+
 	}
 
 }

@@ -17,6 +17,8 @@ public:
 
 	void ProcessMaps(const TRIPLET &inputMaps, bool bp_on = false);
 
+	void ProcessBProp(const TRIPLET &inputErrors);
+
 	void ResizeOutput(int InputMapHeight, int InputMapWidth);
 
 	void WriteCoreToFile(std::string configFiledName);

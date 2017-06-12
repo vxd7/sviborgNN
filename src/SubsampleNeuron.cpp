@@ -106,3 +106,17 @@ double SubsampleNeuron::sigmoidTresholdFuncDerivative(const double& x) {
 std::vector<std::vector<double>>& SubsampleNeuron::getOuputMap() {
 	return outputFeatureMap;
 }
+// some shit, needs consideration
+void SubsampleNeuron::processBProp(MATRIX& Errors){
+	MATRIX tmp;
+	tmp.resize(Errors.size() * 2);
+	for (size_t i = 0; i < Errors.size() * 2; ++i) {
+		tmp.resize(Errors.size() * 2);
+	}
+	for (size_t i = 0; i < Errors.size(); i+=2) {
+		for (size_t j = 0; j < Errors[i].size(); j += 2) {
+			tmp[winning_unit[i].first + i][winning_unit[i].second + j] = Errors[i][j];
+		}
+	}
+	
+}

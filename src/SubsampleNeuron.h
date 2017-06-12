@@ -32,6 +32,8 @@ public:
 	double getMax(const std::vector<double>& elems);
     double sigmoidTresholdFunc(const double& x);
 	double sigmoidTresholdFuncDerivative(const double& x);
+	// processBProp expands the errors matrix!
+	void processBProp(MATRIX& Errors);
 
 	int winning_unit_i;
 	std::vector<std::pair<int,int>> winning_unit;
