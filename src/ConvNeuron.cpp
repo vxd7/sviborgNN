@@ -78,6 +78,17 @@ double ConvNeuron::summate(const MATRIX &InputMap, int ipos, int jpos) {
 	return summ;
 }
 
+double ConvNeuron::transpose_summate(const MATRIX &InputMap, int ipos, int jpos) {
+	double summ = 0;
+	for (int i = 0; i < convMatrixHeight; ++i) {
+		for (int j = 0; j < convMatrixWidth; ++j) {
+			summ += InputMap[i + ipos][j + jpos] * ConvCore[j][i];
+		}
+	}
+	return summ;
+}
+
+
 double ConvNeuron::tFunc(const double x) {	
 	/*double a =(10000*tanh(-1))/7615;*/
 	return (10000 * tanh(x)) / 7615; // 10000/7615 coeff is amplitude which makes equalities f(1)=1 and f(-1)=-1 satisfied
@@ -153,24 +164,55 @@ void ConvNeuron::ResizeBPOutput(int InputMapHeight, int InputMapWidth) {
 void ConvNeuron::GetOutput(MATRIX &tmp) {
 	tmp = OutputMap;
 }
-// requires consideration!
-void ConvNeuron::ProcessBProp(const TRIPLET &inputErrors) {
-
-	int inputMapHeight, inputMapWidth;
-	inputMapHeight = inputErrors[0].size();
-	inputMapWidth = inputErrors[0][0].size();
-
-	ResizeBPOutput(inputMapHeight, inputMapWidth);
-
-	for (size_t i = 0; i < )
-
-	for (size_t i = 0; i < bpDerivativeValue.size(); ++i) {
-		for (size_t j = 0; j < bpDerivativeValue[i].size(); ++j) {
-			// bpDerivativeValue * rot(w) * delta_l+1!!!
-			// summate rot 
-//			outputErrors[i][j] = bpDerivativeValue[i][j]* ConvCore[ConvCore.size() - i][ConvCore.size() - j] * Deltas[i][j] * OutputMap[i][j];
+// zero padding is required to reestablish input map size;
+void ConvNeuron::zero_padding(MATRIX& tmp, int height, int width) {
+	for (size_t i = 0; i < tmp.size(); ++i) {
+		for (size_t j = 0; j < width - tmp[i].size(); ++j) {
+			tmp[i].push_back(0.0);
 		}
 	}
+	std::vector<double> zero(width);
+	for (size_t i = 0; i < height - tmp.size(); ++i) {
+		tmp.push_back(zero);
+	}
+
+}
+// requires consideration!
+void ConvNeuron::ProcessBProp(const TRIPLET &deltas) {
+	int inputMapHeight, inputMapWidth;
+	inputMapHeight = deltas[0].size();
+	inputMapWidth = deltas[0][0].size();
+	// BPOutput is for deltas
+	// CoreUpdates is for d Errors/ d w
+
+	ResizeBPOutput(inputMapHeight, inputMapWidth);
+	// make a copy of TRIPLET to allow changes
+	TRIPLET inputMapLocalCopy = deltas;
+
+	for (size_t i = 0; i < deltas.size(); ++i) {
+		// add zeroes and expand matrix. required for convcores product
+		zero_padding(inputMapLocalCopy[i], BPOutput.size(), BPOutput[0].size());
+	}
+	// d Error / d output aka deltas
+	for (int j = 0; j < inputMapHeight; ++j) {
+		for (int k = 0; k < inputMapWidth; ++k) {
+			double sectorSumm = 0;
+			for (int i = 0; i < deltas.size(); ++i) {
+				double summ = 0;
+				summ = transpose_summate(inputMapLocalCopy[i], j, k);
+				sectorSumm += summ;
+			}
+			BPOutput[j][k] += sectorSumm;
+		}
+
+	}
+	// d Error/ d weight
+	for (size_t i = 0; i < BPOutput.size(); ++i) {
+		for (size_t j = 0; j < BPOutput.size(); ++j) {
+			CoreUpdates[i].push_back(BPOutput[i][j] * OutputMap[i][j]);
+		}
+	}
+	
 }
 
 void ConvNeuron::GetBPOutput(MATRIX &tmp) {
