@@ -34,7 +34,7 @@ public:
     double sigmoidTresholdFunc(const double& x);
 	double sigmoidTresholdFuncDerivative(const double& x);
 	// processBProp expands the errors matrix!
-	void processBProp(MATRIX &Errors);
+	void processBProp(const std::vector<std::vector<double>>& Errors);
 	std::vector<std::vector<double>>& getBPOutput();
 
 	int winning_unit_i;

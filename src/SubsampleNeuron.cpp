@@ -67,7 +67,12 @@ void SubsampleNeuron::subsampleMap(const std::vector<std::vector<double>>& input
 			// save winning unit location in subsample matrix size 2x2. In b-pass we'll be setting elements
 			// of matrix in new expanded matrix with respect to winning locations;
 			if (bp_on) {
-				winning_unit.push_back(std::make_pair(std::distance(elems.begin(), std::max_element(elems.begin(), elems.end())), (winning_unit_i - 1) / 2));
+				int tmp = std::distance(elems.begin(), std::max_element(elems.begin(), elems.end()));
+				if (tmp <= 1)
+					winning_unit.push_back(std::make_pair(tmp / 2, tmp));
+				else
+					winning_unit.push_back(std::make_pair(tmp / 2, tmp - 2));
+
 			}
 
 			summ *= subsampleCoeff;
@@ -110,10 +115,10 @@ std::vector<std::vector<double>>& SubsampleNeuron::getBPOutput() {
 	return BPOutput;
 }
 // some shit, needs consideration
-void SubsampleNeuron::processBProp(MATRIX &Errors){
+void SubsampleNeuron::processBProp(const std::vector<std::vector<double>>& Errors){
 	BPOutput.resize(Errors.size() * 2);
 	for (size_t i = 0; i < Errors.size() * 2; ++i) {
-		BPOutput.resize(Errors.size() * 2);
+		BPOutput[i].resize(Errors.size() * 2);
 	}
 	for (size_t i = 0; i < Errors.size(); i+=2) {
 		for (size_t j = 0; j < Errors[i].size(); j += 2) {

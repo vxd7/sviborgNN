@@ -50,9 +50,9 @@ void SubsampleLayer::ProcessLayerInput(const TRIPLET& inputMapList, bool bp_on) 
 	}
 }
 
-void SubsampleLayer::ProcessBackProp(const TRIPLET &inputMapList) {
+void SubsampleLayer::ProcessBackProp(const TRIPLET &input) {
 	for (size_t i = 0; i < numberOfNeurons; ++i) {
-//		layerNeurons[i].processBProp(inputMapList[i]);
+		layerNeurons[i].processBProp(input[i]);
 	}
 }
 

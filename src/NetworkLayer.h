@@ -138,7 +138,7 @@ public:
 
 	void ProcessLayerInput(const TRIPLET& inputMapList, bool bp_on = false);
 
-	void ProcessBackProp(const TRIPLET& inputMapList);
+	void ProcessBackProp(const TRIPLET& input);
 
 	void GetOutput(TRIPLET &Output);
 

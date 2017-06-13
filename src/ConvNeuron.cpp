@@ -115,6 +115,12 @@ void ConvNeuron::ProcessMaps(const TRIPLET &inputMaps, bool bp_on) {
 
 	ResizeOutput(inputMapHeight, inputMapWidth);
 
+	if (bp_on) {
+		bpDerivativeValue.resize(OutputMap.size());
+		for (int i = 0; i < bpDerivativeValue.size(); ++i) {
+			bpDerivativeValue[i].resize(OutputMap[i].size());
+		}
+	}
 	
 		for (int j = 0; j < OutputMap.size(); ++j) {
 			for (int k = 0; k < OutputMap[j].size(); ++k) {
@@ -156,8 +162,8 @@ void ConvNeuron::ResizeOutput(int InputMapHeight, int InputMapWidth) {
 void ConvNeuron::ResizeBPOutput(int InputMapHeight, int InputMapWidth) {
 	//resizing error map
 	BPOutput.resize(OutputMap.size() + convMatrixHeight - 1);
-	for (size_t i = 0; i < OutputMap.size(); ++i) {
-		BPOutput[i].resize(OutputMap[i].size() + convMatrixWidth - 1);
+	for (size_t i = 0; i < BPOutput.size(); ++i) {
+		BPOutput[i].resize(OutputMap[0].size() + convMatrixWidth - 1);
 	}
 }
 
@@ -167,12 +173,12 @@ void ConvNeuron::GetOutput(MATRIX &tmp) {
 // zero padding is required to reestablish input map size;
 void ConvNeuron::zero_padding(MATRIX& tmp, int height, int width) {
 	for (size_t i = 0; i < tmp.size(); ++i) {
-		for (size_t j = 0; j < width - tmp[i].size(); ++j) {
+		for (size_t j = 0; j <= width - tmp[i].size(); ++j) {
 			tmp[i].push_back(0.0);
 		}
 	}
 	std::vector<double> zero(width);
-	for (size_t i = 0; i < height - tmp.size(); ++i) {
+	for (size_t i = 0; i <= height - tmp.size(); ++i) {
 		tmp.push_back(zero);
 	}
 
@@ -205,6 +211,11 @@ void ConvNeuron::ProcessBProp(const TRIPLET &deltas) {
 			BPOutput[j][k] += sectorSumm;
 		}
 
+	}
+	for (size_t i = 0; i < bpDerivativeValue.size(); ++i) {
+		for (size_t j = 0; j < bpDerivativeValue[i].size(); ++j) {
+			BPOutput[i][j] *= bpDerivativeValue[i][j];
+		}
 	}
 	// d Error/ d weight
 	for (size_t i = 0; i < BPOutput.size(); ++i) {

@@ -94,6 +94,12 @@ void ConvolutionLayer::GetOutput(TRIPLET &Output) {
 	}
 }
 
+void ConvolutionLayer::GetBPOutput(TRIPLET &Output) {
+	Output.resize(numberOfNeurons);
+	for (int i = 0; i < numberOfNeurons; ++i) {
+		neurons[i].GetBPOutput(Output[i]);
+	}
+}
 
 void ConvolutionLayer::ReadSingleCore(ConfigManager &cfg, std::string sectionName, int neuronNumber, MATRIX &resCore) {
 	std::ifstream neuronCoreFile;
